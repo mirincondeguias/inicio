@@ -1,0 +1,5 @@
+titulo: La Alimentación Saludable y la Higiene
+categoria: Ciencias Naturales
+precio digital: 1.99
+descripcion: Cuaderno de ciencias naturales sobre alimentos saludables y buenos hábitos de higiene, con actividades divertidas.
+precio impresa: 355

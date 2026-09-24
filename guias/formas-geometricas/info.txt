@@ -1,0 +1,5 @@
+titulo: Formas Geométricas
+categoria: Matemáticas
+precio digital: 1.99
+descripcion: Cuaderno de matemáticas para identificar y practicar las formas geométricas básicas jugando.
+precio impresa: 355

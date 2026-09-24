@@ -1,0 +1,5 @@
+titulo: El Reloj y las Horas
+categoria: Matemáticas
+precio digital: 1.99
+descripcion: Cuaderno de matemáticas para aprender a leer la hora en el reloj con actividades prácticas y divertidas.
+precio impresa: 355

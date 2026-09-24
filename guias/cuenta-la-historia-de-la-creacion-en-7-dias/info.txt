@@ -1,0 +1,5 @@
+titulo: Cuenta la Historia de la Creación en 7 Días
+categoria: Religión y Valores
+precio digital: 1.99
+descripcion: Guía especial para conocer, según la Biblia, cómo Dios creó el mundo en 7 días: una hoja por cada día con actividades y certificado al final.
+precio impresa: 295
