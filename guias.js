@@ -138,7 +138,8 @@ window.GUIAS = [
  {
   "titulo": "Los Dinosaurios y su Mundo Prehistórico",
   "categoria": [
-   "Ciencias Naturales"
+   "Ciencias Naturales",
+   "Colorear"
   ],
   "descripcion": "Descubre a los dinosaurios y cómo era su mundo con actividades ilustradas para los más curiosos.",
   "digital": 1.99,
