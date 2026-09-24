@@ -1,0 +1,5 @@
+titulo: Sumas hasta 20
+categoria: Matemáticas
+precio digital: 1.99
+descripcion: Cuaderno de matemáticas para practicar sumas hasta el 20 de forma divertida.
+precio impresa: 355

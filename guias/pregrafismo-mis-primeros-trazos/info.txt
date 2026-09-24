@@ -1,0 +1,5 @@
+titulo: Pregrafismo: Mis Primeros Trazos
+categoria: Lengua Española
+precio digital: 1.99
+descripcion: Cuaderno de lengua española con trazos de pregrafismo para preparar la mano antes de escribir letras y números.
+precio impresa: 355

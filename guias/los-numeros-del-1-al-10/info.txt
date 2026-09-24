@@ -1,0 +1,5 @@
+titulo: Los Números del 1 al 10
+categoria: Matemáticas
+precio digital: 1.99
+descripcion: Cuaderno de matemáticas para aprender los números del 1 al 10, uno por cada hoja, con actividades para practicar.
+precio impresa: 375

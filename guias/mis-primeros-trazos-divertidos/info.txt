@@ -1,0 +1,5 @@
+titulo: Mis Primeros Trazos Divertidos
+categoria: Caligrafía
+descripcion: Cuaderno de caligrafía para niños de 3 a 5 años con trazos, vocales y actividades divertidas para empezar a escribir. Incluye 10 páginas de práctica y certificado.
+precio digital: 1.99
+precio impresa: 450

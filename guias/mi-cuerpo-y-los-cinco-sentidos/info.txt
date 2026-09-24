@@ -1,0 +1,5 @@
+titulo: Mi Cuerpo y los Cinco Sentidos
+categoria: Ciencias Naturales
+precio digital: 1.99
+descripcion: Cuaderno de ciencias naturales para explorar las partes del cuerpo y los cinco sentidos con actividades divertidas.
+precio impresa: 355

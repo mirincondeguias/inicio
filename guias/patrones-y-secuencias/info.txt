@@ -1,0 +1,5 @@
+titulo: Patrones y Secuencias
+categoria: Matemáticas
+precio digital: 1.99
+descripcion: Cuaderno de matemáticas para identificar y completar patrones y secuencias de forma divertida.
+precio impresa: 355
