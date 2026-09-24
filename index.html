@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi Rincón de Guías · Guías infantiles y educativas</title>
+<meta name="description" content="Guías infantiles y educativas en formato digital e impreso. También hacemos guías personalizadas.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--crema:#FFF7E8;--tinta:#4A2E1F;--azul:#2F8FD8;--naranja:#F58A33;--amarillo:#F9B81F;--verde:#4DB35A;--rosa:#F2648A;--morado:#9B7BD8;--wa:#25D366;--borde:3px solid var(--tinta)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--crema);color:var(--tinta);font:700 1.05rem/1.55 Nunito,"Trebuchet MS",system-ui,sans-serif}
+h1,h2,h3,.fx{font-family:Fredoka,"Trebuchet MS",system-ui,sans-serif;line-height:1.15;margin:0}
+button,a.btn{font:inherit;cursor:pointer}
+:focus-visible{outline:4px solid var(--azul);outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+/* cabecera */
+header{position:sticky;top:0;z-index:20;background:var(--crema);border-bottom:var(--borde)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.marca{display:flex;align-items:center;gap:10px;font:600 1.3rem Fredoka,sans-serif;color:var(--tinta);text-decoration:none}
+.marca img{width:46px;height:46px}
+#btnCarrito{position:relative;display:flex;align-items:center;gap:8px;background:var(--amarillo);color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 18px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
+#btnCarrito:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+#cuenta{background:var(--tinta);color:#fff;border-radius:999px;min-width:26px;padding:0 8px;text-align:center;font-size:.9rem}
+#cuenta.salto{animation:salto .4s}
+@keyframes salto{40%{transform:scale(1.5)}}
+/* portada */
+.hero{padding:44px 0 30px}
+.hero .wrap{display:grid;grid-template-columns:1fr 250px;gap:30px;align-items:center}
+h1{font-size:clamp(2.4rem,6.2vw,4.4rem);font-weight:700;margin-bottom:14px}
+h1 .p{display:inline-block;white-space:nowrap;margin-right:.28em}
+h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:calc(var(--i)*45ms)}
+@keyframes brota{from{transform:translateY(.5em) scale(.4);opacity:0}}
+.hero p.sub{font-size:1.2rem;max-width:34em;margin:0 0 22px}
+.hero img{width:100%;height:auto;transform:rotate(6deg)}
+.buscar{position:relative;max-width:560px}
+.buscar input{width:100%;font:800 1.15rem Nunito,sans-serif;color:var(--tinta);padding:15px 50px 15px 54px;border:var(--borde);border-radius:999px;background:#fff;box-shadow:5px 5px 0 var(--azul)}
+.buscar input::placeholder{color:#8a6c58}
+.buscar svg{position:absolute;left:18px;top:50%;translate:0 -50%;width:26px;height:26px;pointer-events:none}
+#limpiar{position:absolute;right:10px;top:50%;translate:0 -50%;width:34px;height:34px;border:0;border-radius:50%;background:var(--crema);color:var(--tinta);font-size:1.2rem;font-weight:800;display:none}
+/* catálogo */
+.tit{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:26px 0 22px}
+.tit h2{font-size:1.9rem}
+#estado{margin:0}
+.grupo{margin-bottom:44px}
+.grupo:last-child{margin-bottom:0}
+.grupo-tit{display:flex;align-items:center;gap:12px;margin:0 0 18px}
+.grupo-tit h3{font-size:1.5rem;color:var(--gc,var(--azul))}
+.grupo-tit .n{background:var(--gc,var(--azul));color:#fff;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:800}
+.grupo-tit::after{content:'';flex:1;height:3px;background:var(--gc,var(--azul));border-radius:3px;opacity:.35}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:30px;padding-bottom:50px}
+.card{--c:var(--azul);display:flex;flex-direction:column;background:#fff;border:var(--borde);border-radius:26px;box-shadow:7px 7px 0 var(--c);overflow:hidden}
+.card .img{background:var(--c);padding:10px 10px 0;border-bottom:var(--borde)}
+.car{position:relative;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
+.pistas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:auto;overscroll-behavior-x:contain}
+.pistas::-webkit-scrollbar{display:none}
+.pistas img{flex:0 0 100%;scroll-snap-align:start;display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.fl{position:absolute;top:50%;translate:0 -50%;width:36px;height:36px;border:2px solid var(--tinta);border-radius:50%;background:rgba(255,247,232,.92);color:var(--tinta);font-weight:800;font-size:1.3rem;line-height:1;padding:0}
+.fl.prev{left:6px}.fl.next{right:6px}
+.body{display:flex;flex-direction:column;gap:10px;padding:16px;flex:1}
+.body h3{font-size:1.35rem}
+.desc{margin:0;font-size:.98rem;font-weight:600;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.desc.abierta{display:block}
+.mas{align-self:flex-start;background:none;border:0;padding:0;color:var(--azul);font-weight:800;text-decoration:underline}
+.fmt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.fmt.uno{grid-template-columns:1fr}
+.fmt button,.fmt span{display:flex;flex-direction:column;align-items:center;padding:7px 4px;border:var(--borde);border-radius:14px;background:#fff;color:var(--tinta);font-weight:800;line-height:1.2}
+.fmt button[aria-checked=true],.fmt span{background:var(--tinta);color:#fff}
+.fmt b{font:600 1.15rem Fredoka,sans-serif}
+.btn{display:block;text-align:center;text-decoration:none;border:var(--borde);border-radius:999px;padding:10px 16px;font-weight:800;color:var(--tinta)}
+.add{background:var(--naranja);box-shadow:3px 3px 0 var(--tinta)}
+.add:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+.add:disabled{background:#e8dccb;box-shadow:none;cursor:default}
+.wa{background:var(--wa)}
+.enc{margin:-4px 0 0;text-align:center;font-size:.9rem;color:#7b5b46}
+.custom{--c:var(--verde);background:var(--amarillo);justify-content:center;text-align:center;padding:26px 20px;gap:14px}
+.custom .ico{font-size:3.2rem}
+.custom h3{font-size:1.6rem}
+.custom p{margin:0}
+/* carrito */
+#velo{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:30;display:none}
+#cajon{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--crema);border-left:var(--borde);z-index:31;display:flex;flex-direction:column;translate:100% 0;visibility:hidden;transition:translate .3s,visibility .3s}
+body.abierto #velo{display:block}
+body.abierto #cajon{translate:0 0;visibility:visible}
+#cajon header{position:static;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;height:auto}
+#cajon h2{font-size:1.5rem}
+#cerrar{width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.2rem;font-weight:800}
+#lineas{flex:1;overflow:auto;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.lin{display:grid;grid-template-columns:56px 1fr;gap:12px;background:#fff;border:var(--borde);border-radius:16px;padding:10px}
+.lin img{width:56px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--tinta)}
+.lin h4{margin:0;font:600 1.05rem/1.2 Fredoka,sans-serif}
+.lin small{font-weight:700;color:#7b5b46}
+.ctl{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}
+.ctl button{width:32px;height:32px;border:var(--borde);border-radius:50%;background:var(--crema);color:var(--tinta);font-weight:800;line-height:1}
+.ctl .q{min-width:22px;text-align:center}
+.ctl .quitar{width:auto;border-radius:999px;padding:0 12px;font-size:.85rem}
+.ctl .pr{margin-left:auto;font:600 1.1rem Fredoka,sans-serif}
+.vacio{text-align:center;padding:40px 10px}
+#pie{padding:16px 18px;border-top:var(--borde);display:grid;gap:12px}
+#pie .tot{display:flex;justify-content:space-between;font:600 1.4rem Fredoka,sans-serif}
+#pie .btn[aria-disabled=true]{opacity:.5;pointer-events:none}
+#aviso{position:fixed;left:50%;top:78px;translate:-50% -150px;background:var(--tinta);color:#fff;padding:10px 20px;border-radius:999px;z-index:40;transition:translate .3s;pointer-events:none}
+#aviso.ver{translate:-50% 0}
+footer{background:var(--tinta);color:#fff;padding:34px 0;text-align:center}
+footer p{margin:6px 0}
+@media(max-width:720px){.hero .wrap{grid-template-columns:1fr}.hero img{width:130px;order:-1;margin:0}.rejilla{gap:26px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="marca" href="#"><img src="logo.png" alt="">Mi Rincón de Guías</a>
+  <button id="btnCarrito" aria-label="Abrir carrito">🛒 Carrito <span id="cuenta">0</span></button>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+  <div>
+    <h1 id="titulo" aria-label="Guías para aprender jugando">Guías para aprender jugando</h1>
+    <p class="sub">Guías infantiles y educativas en formato digital o impreso. ¿No ves la que buscas? Te la hacemos a tu medida.</p>
+    <form class="buscar" role="search" onsubmit="return false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#4A2E1F" stroke-width="3" stroke-linecap="round"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/></svg>
+      <input id="q" type="search" autocomplete="off" placeholder="Busca por tema, edad o palabra…" aria-label="Buscar guías">
+      <button id="limpiar" type="button" aria-label="Borrar búsqueda">✕</button>
+    </form>
+  </div>
+  <img src="logo.png" alt="Logo de Mi Rincón de Guías">
+</div></section>
+
+<section class="wrap" id="catalogo">
+  <div class="tit"><h2>Nuestras guías</h2><p id="estado" aria-live="polite"></p></div>
+  <div id="rejilla"></div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <p class="fx" style="font-size:1.4rem">Mi Rincón de Guías</p>
+  <p>Aprende, diviértete, crea.</p>
+  <p><a id="waPie" class="btn wa" style="display:inline-block" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></p>
+</div></footer>
+
+<div id="velo"></div>
+<aside id="cajon" aria-label="Carrito de compras">
+  <header><h2>Tu carrito</h2><button id="cerrar" aria-label="Cerrar carrito">✕</button></header>
+  <div id="lineas"></div>
+  <div id="pie"><div class="tot"><span>Total</span><span id="total"></span></div>
+  <a id="pedir" class="btn wa" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a></div>
+</aside>
+<div id="aviso" role="status"></div>
+
+<script src="guias.js"></script>
+<script>
+const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000};
+const COL=['#2F8FD8','#F58A33','#4DB35A','#F2648A','#9B7BD8'];
+const G=(window.GUIAS||[]);
+/* categorías: orden fijo de exhibición + un color por categoría */
+const CATS_ORDEN=['Matemáticas','Lengua Española','Ciencias Naturales','Caligrafía','Religión y Valores'];
+const CATCOL={};CATS_ORDEN.forEach((c,i)=>CATCOL[c]=COL[i%COL.length]);
+const catColor=c=>CATCOL[c]||(CATCOL[c]=COL[Object.keys(CATCOL).length%COL.length]);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=(n,f)=>f=='d'?'US$ '+Number(n).toFixed(2):CFG.mon+' '+Number(n).toLocaleString('es-DO');
+const wa=t=>'https://wa.me/'+CFG.tel+'?text='+encodeURIComponent(t);
+const NOM={d:'Digital',p:'Impresa'};
+const precio=(g,f)=>f=='d'?g.digital:g.impreso;
+
+/* carrito: clave "indice|d" (digital, máx. 1) o "indice|p" (impresa, varias) */
+let cart={};
+try{cart=JSON.parse(localStorage.getItem('mrg-carrito')||'{}')}catch(e){}
+for(const k in cart){const[i,f]=k.split('|');if(!G[i]||precio(G[i],f)==null)delete cart[k]}
+const guardar=()=>{try{localStorage.setItem('mrg-carrito',JSON.stringify(cart))}catch(e){}};
+const fmt={};
+
+/* buscador inteligente: sin tildes, plurales, errores de tipeo y sinónimos */
+const STOP=new Set('de la el los las para con y e un una mis mi en a del al guia guias quiero busco necesito'.split(' '));
+const SIN={numero:'matematica mate contar sumar restar',letra:'abecedario vocal lectura leer escribir',trazo:'pregrafismo caligrafia escritura',color:'pintar colorear dibujo',animal:'granja selva mascota'};
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ');
+const stem=w=>w.length>4?w.replace(/(es|s)$/,''):w;
+const toks=s=>norm(s).split(/\s+/).filter(w=>w&&!STOP.has(w)).map(stem);
+function ed(a,b){let p=Array.from({length:b.length+1},(_,j)=>j);for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]==b[j-1]?0:1));p=c}return p[b.length]}
+function cerca(q,ws){let b=0;for(const w of ws){let s=0;
+  if(w==q)s=3;else if(q.length>2&&(w.startsWith(q)||(q.startsWith(w)&&w.length>3)))s=2.2;
+  else if(q.length>3&&ed(q,w)<=(q.length>6?2:1))s=1.6;
+  b=Math.max(b,s)}return b}
+G.forEach(g=>{g.T=toks(g.titulo);g.D=toks(g.descripcion)});
+function puntos(g,qs){let t=0,ok=0;for(const q of qs){
+  const alts=[q,...(SIN[q]?SIN[q].split(' ').map(stem):[])];let b=0;
+  alts.forEach((a,i)=>{const k=i?.6:1;b=Math.max(b,cerca(a,g.T)*2*k,cerca(a,g.D)*k)});
+  if(b>0){ok++;t+=b}}
+  return ok?t+(ok==qs.length?5:0):0}
+
+/* pintar catálogo */
+function carrusel(g){const im=g.imgs&&g.imgs.length?g.imgs:[g.img],n=im.length;
+  return `<div class="car"><div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
+function tarjeta(g,i,cat){
+  const f=fmt[i]||(fmt[i]=g.digital!=null?'d':'p');
+  const en=cart[i+'|'+f]||0, bloqueada=f=='d'&&en;
+  const dos=g.digital!=null&&g.impreso!=null;
+  const op=x=>precio(g,x)==null?'':dos
+    ?`<button role="radio" aria-checked="${f==x}" data-a="fmt" data-f="${x}">${NOM[x]}<b>${money(precio(g,x),x)}</b></button>`
+    :`<span>${NOM[x]}<b>${money(precio(g,x),x)}</b></span>`;
+  return `<article class="card" style="--c:${catColor(cat||(g.categoria&&g.categoria[0])||'Otras guías')}" data-i="${i}">
+   <div class="img">${carrusel(g)}</div>
+   <div class="body"><h3>${esc(g.titulo)}</h3>
+   <p class="desc">${esc(g.descripcion)}</p><button class="mas" data-a="mas" aria-expanded="false">Ver más</button>
+   <div class="fmt${dos?'':' uno'}" ${dos?'role="radiogroup" aria-label="Formato"':''}>${op('d')}${op('p')}</div>
+   <button class="btn add" data-a="add" ${bloqueada?'disabled':''}>${bloqueada?'✓ Ya está en tu carrito':'Añadir al carrito'}</button>
+   ${en&&f=='p'?`<p class="enc">${en} en tu carrito</p>`:''}
+   <a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato ${NOM[f].toLowerCase()}.`)}">Cotizar por WhatsApp</a>
+   </div></article>`}
+function personalizada(q){
+  return `<article class="card custom"><div class="ico">✏️</div><h3>¿Necesitas una guía personalizada?</h3>
+  <p>${q?`No encontramos «${esc(q)}», pero la podemos crear para ti.`:'Cuéntanos el tema, la edad y el formato, y la creamos para ti.'}</p>
+  <a class="btn wa" target="_blank" rel="noopener" href="${wa(q?`¡Hola! No encontré "${q}" en el catálogo y necesito una guía personalizada. ¿Me pueden cotizar?`:'¡Hola! Necesito una guía personalizada. ¿Me pueden cotizar?')}">Cotizar por WhatsApp</a></article>`}
+function pintar(){
+  const q=$('#q').value.trim(), qs=toks(q);
+  let lista=G.map((g,i)=>({g,i,s:qs.length?puntos(g,qs):1})).filter(x=>x.s>0);
+  if(qs.length)lista.sort((a,b)=>b.s-a.s);
+  $('#limpiar').style.display=q?'block':'none';
+  $('#estado').textContent=!q?`${G.length} guía${G.length==1?'':'s'}`:lista.length?`${lista.length} resultado${lista.length==1?'':'s'} para «${q}»`:`Sin resultados para «${q}»`;
+  /* agrupar por categoría (una guía puede pertenecer a varias); respeta el orden de relevancia dentro de cada grupo */
+  const porCat={};
+  lista.forEach(x=>{const cs=(x.g.categoria&&x.g.categoria.length?x.g.categoria:['Otras guías']);
+    cs.forEach(c=>{(porCat[c]=porCat[c]||[]).push(x)})});
+  const ordenCats=[...CATS_ORDEN.filter(c=>porCat[c]),...Object.keys(porCat).filter(c=>!CATS_ORDEN.includes(c))];
+  $('#rejilla').innerHTML=ordenCats.map(c=>
+    `<section class="grupo" style="--gc:${catColor(c)}"><div class="grupo-tit"><h3>${esc(c)}</h3><span class="n">${porCat[c].length}</span></div>
+    <div class="rejilla">${porCat[c].map(x=>tarjeta(x.g,x.i,c)).join('')}</div></section>`
+  ).join('') + `<section class="grupo"><div class="rejilla">${personalizada(q)}</div></section>`;
+  document.querySelectorAll('.pistas').forEach(c=>{const x=posG[c.closest('.card').dataset.i]||0;if(x)ir(c,x,false)});
+}
+$('#rejilla').addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const i=b.closest('.card').dataset.i,g=G[i],a=b.dataset.a;
+  if(a=='ir'||a=='prev'||a=='next'){const c=b.closest('.card').querySelector('.pistas'),n=c.children.length;
+    ir(c,a=='ir'?+b.dataset.n:(pos(c)+(a=='next'?1:-1)+n)%n);c._p=Date.now()+5000;return}
+  if(a=='mas'){const d=b.previousElementSibling.classList.toggle('abierta');b.textContent=d?'Ver menos':'Ver más';b.setAttribute('aria-expanded',d);return}
+  if(a=='fmt'){fmt[i]=b.dataset.f;pintar();return}
+  const k=i+'|'+fmt[i];
+  if(fmt[i]=='d'&&cart[k])return;
+  cart[k]=fmt[i]=='d'?1:(cart[k]||0)+1;
+  cambio();aviso(`«${g.titulo}» (${NOM[fmt[i]].toLowerCase()}) añadida`);
+  $('#cuenta').classList.remove('salto');void $('#cuenta').offsetWidth;$('#cuenta').classList.add('salto');
+});
+
+/* panel del carrito */
+function cambio(){guardar();pintar();cajon()}
+function cajon(){
+  const ks=Object.keys(cart);let totD=0,totP=0,n=0,msg=[];
+  $('#lineas').innerHTML=ks.length?ks.map(k=>{const[i,f]=k.split('|'),g=G[i],q=cart[k],p=precio(g,f);if(f=='d')totD+=p*q;else totP+=p*q;n+=q;
+    msg.push(`• ${g.titulo} (${NOM[f]}) x${q} — ${money(p*q,f)}`);
+    return `<div class="lin" data-k="${k}"><img src="${g.img}" alt=""><div><h4>${esc(g.titulo)}</h4><small>${NOM[f]}</small>
+    <div class="ctl">${f=='p'?`<button data-c="-" aria-label="Quitar una">−</button><span class="q">${q}</span><button data-c="+" aria-label="Añadir una">+</button>`:'<button class="quitar" data-c="x">Quitar</button>'}
+    <span class="pr">${money(p*q,f)}</span></div></div></div>`}).join('')
+    :'<div class="vacio"><p class="fx" style="font-size:1.3rem">Tu carrito está vacío</p><p>Elige una guía y pulsa «Añadir al carrito».</p></div>';
+  $('#cuenta').textContent=n;
+  const totTxt=[totD?money(totD,'d'):'',totP?money(totP,'p'):''].filter(Boolean).join(' + ')||money(0,'p');
+  $('#total').textContent=totTxt;
+  const p=$('#pedir');p.setAttribute('aria-disabled',!ks.length);
+  p.href=ks.length?wa(`¡Hola! Quiero hacer este pedido en ${CFG.negocio}:\n${msg.join('\n')}\nTotal: ${totTxt}`):'#';
+}
+$('#lineas').addEventListener('click',e=>{
+  const b=e.target.closest('[data-c]');if(!b)return;const k=b.closest('.lin').dataset.k,c=b.dataset.c;
+  if(c=='+')cart[k]++;else if(c=='-'){if(--cart[k]<1)delete cart[k]}else delete cart[k];cambio()});
+const abrir=v=>{document.body.classList.toggle('abierto',v);if(v)$('#cerrar').focus();else $('#btnCarrito').focus()};
+$('#btnCarrito').onclick=()=>abrir(true);$('#cerrar').onclick=$('#velo').onclick=()=>abrir(false);
+addEventListener('keydown',e=>{if(e.key=='Escape')abrir(false)});
+let tm;function aviso(t){const a=$('#aviso');a.textContent=t;a.classList.add('ver');clearTimeout(tm);tm=setTimeout(()=>a.classList.remove('ver'),1800)}
+
+/* carrusel: rota solo, se pausa al tocarlo o pasar el mouse, y se puede deslizar */
+const posG={},pos=c=>Math.round(c.scrollLeft/c.clientWidth);
+const ir=(c,x,suave=true)=>c.scrollTo({left:x*c.clientWidth,behavior:suave?'smooth':'auto'});
+let sobre=null;const R=$('#rejilla');
+R.addEventListener('scroll',e=>{const c=e.target;if(!c.classList||!c.classList.contains('pistas'))return;
+  const x=pos(c);posG[c.closest('.card').dataset.i]=x},true);
+['pointerdown','touchstart','wheel','focusin'].forEach(ev=>R.addEventListener(ev,e=>{
+  const c=e.target.closest&&e.target.closest('.car');if(c)c.querySelector('.pistas')._p=Date.now()+5000},{passive:true}));
+R.addEventListener('pointerover',e=>{if(e.pointerType=='mouse')sobre=e.target.closest('.car')});
+R.addEventListener('mouseleave',()=>sobre=null);
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(()=>{
+  if(document.hidden||document.body.classList.contains('abierto'))return;
+  document.querySelectorAll('.pistas').forEach(c=>{
+    if(c.children.length<2||c.parentElement==sobre||Date.now()<(c._p||0))return;
+    const r=c.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
+    const x=(pos(c)+1)%c.children.length;ir(c,x,x!=0)})},CFG.rota);
+
+/* inicio */
+$('#q').addEventListener('input',pintar);
+$('#limpiar').onclick=()=>{$('#q').value='';pintar();$('#q').focus()};
+$('#waPie').href=wa('¡Hola! Quisiera información sobre las guías de Mi Rincón de Guías.');
+{let n=0;$('#titulo').innerHTML=$('#titulo').textContent.split(' ').map(w=>`<span class="p" aria-hidden="true">${[...w].map(c=>`<span class="l" style="--i:${n++};color:${COL[n%5]}">${c}</span>`).join('')}</span>`).join(' ')}
+pintar();cajon();
+</script>
+</body>
+</html>
