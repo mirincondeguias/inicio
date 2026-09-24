@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFF7E8">
 <title>Mi Rincón de Guías · Guías infantiles y educativas</title>
 <meta name="description" content="Guías infantiles y educativas en formato digital e impreso. También hacemos guías personalizadas.">
 <link rel="icon" href="logo.png">
@@ -12,18 +13,18 @@
 <style>
 :root{--crema:#FFF7E8;--tinta:#4A2E1F;--azul:#2F8FD8;--naranja:#F58A33;--amarillo:#F9B81F;--verde:#4DB35A;--rosa:#F2648A;--morado:#9B7BD8;--wa:#25D366;--borde:3px solid var(--tinta)}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--crema);color:var(--tinta);font:700 1.05rem/1.55 Nunito,"Trebuchet MS",system-ui,sans-serif}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;overflow-x:clip;-webkit-tap-highlight-color:transparent;background:var(--crema);color:var(--tinta);font:700 1.05rem/1.55 Nunito,"Trebuchet MS",system-ui,sans-serif}
 h1,h2,h3,.fx{font-family:Fredoka,"Trebuchet MS",system-ui,sans-serif;line-height:1.15;margin:0}
-button,a.btn{font:inherit;cursor:pointer}
+button,a.btn{font:inherit;cursor:pointer;touch-action:manipulation}
 :focus-visible{outline:4px solid var(--azul);outline-offset:3px}
-.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left))}
 /* cabecera */
-header{position:sticky;top:0;z-index:20;background:var(--crema);border-bottom:var(--borde)}
+header{position:sticky;top:0;z-index:20;background:var(--crema);border-bottom:var(--borde);padding-top:env(safe-area-inset-top)}
 header .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
-.marca{display:flex;align-items:center;gap:10px;font:600 1.3rem Fredoka,sans-serif;color:var(--tinta);text-decoration:none}
-.marca img{width:46px;height:46px}
-#btnCarrito{position:relative;display:flex;align-items:center;gap:8px;background:var(--amarillo);color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 18px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
+.marca{min-width:0;display:flex;align-items:center;gap:10px;font:600 1.3rem Fredoka,sans-serif;color:var(--tinta);text-decoration:none}
+.marca img{width:46px;height:46px;flex:none}.marca span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#btnCarrito{flex:none;min-height:44px;position:relative;display:flex;align-items:center;gap:8px;background:var(--amarillo);color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 18px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
 #btnCarrito:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
 #cuenta{background:var(--tinta);color:#fff;border-radius:999px;min-width:26px;padding:0 8px;text-align:center;font-size:.9rem}
 #cuenta.salto{animation:salto .4s}
@@ -38,10 +39,11 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .hero p.sub{font-size:1.2rem;max-width:34em;margin:0 0 22px}
 .hero img{width:100%;height:auto;transform:rotate(6deg)}
 .buscar{position:relative;max-width:560px}
-.buscar input{width:100%;font:800 1.15rem Nunito,sans-serif;color:var(--tinta);padding:15px 50px 15px 54px;border:var(--borde);border-radius:999px;background:#fff;box-shadow:5px 5px 0 var(--azul)}
+.buscar input{-webkit-appearance:none;appearance:none;width:100%;font:800 1.15rem Nunito,sans-serif;color:var(--tinta);padding:15px 50px 15px 54px;border:var(--borde);border-radius:999px;background:#fff;box-shadow:5px 5px 0 var(--azul)}
 .buscar input::placeholder{color:#8a6c58}
+.buscar input::-webkit-search-cancel-button{display:none}
 .buscar svg{position:absolute;left:18px;top:50%;translate:0 -50%;width:26px;height:26px;pointer-events:none}
-#limpiar{position:absolute;right:10px;top:50%;translate:0 -50%;width:34px;height:34px;border:0;border-radius:50%;background:var(--crema);color:var(--tinta);font-size:1.2rem;font-weight:800;display:none}
+#limpiar{position:absolute;right:6px;top:50%;translate:0 -50%;width:40px;height:40px;border:0;border-radius:50%;background:var(--crema);color:var(--tinta);font-size:1.2rem;font-weight:800;display:none}
 /* catálogo */
 .tit{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:26px 0 22px}
 .tit h2{font-size:1.9rem}
@@ -52,7 +54,7 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .grupo-tit h3{font-size:1.5rem;color:var(--gc,var(--azul))}
 .grupo-tit .n{background:var(--gc,var(--azul));color:#fff;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:800}
 .grupo-tit::after{content:'';flex:1;height:3px;background:var(--gc,var(--azul));border-radius:3px;opacity:.35}
-.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:30px;padding-bottom:50px}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:30px;padding-bottom:50px}
 .card{--c:var(--azul);display:flex;flex-direction:column;background:#fff;border:var(--borde);border-radius:26px;box-shadow:7px 7px 0 var(--c);overflow:hidden}
 .card .img{background:var(--c);padding:10px 10px 0;border-bottom:var(--borde)}
 .car{position:relative;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
@@ -85,12 +87,14 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 #velo{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:30;display:none}
 #cajon{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--crema);border-left:var(--borde);z-index:31;display:flex;flex-direction:column;translate:100% 0;visibility:hidden;transition:translate .3s,visibility .3s}
 body.abierto #velo{display:block}
+body.abierto{overflow:hidden}
+html:has(body.abierto){overflow:hidden}
 body.abierto #cajon{translate:0 0;visibility:visible}
-#cajon header{position:static;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;height:auto}
+#cajon header{position:static;padding:max(14px,env(safe-area-inset-top)) 18px 14px;display:flex;justify-content:space-between;align-items:center;height:auto}
 #cajon h2{font-size:1.5rem}
-#cerrar{width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.2rem;font-weight:800}
-#lineas{flex:1;overflow:auto;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
-.lin{display:grid;grid-template-columns:56px 1fr;gap:12px;background:#fff;border:var(--borde);border-radius:16px;padding:10px}
+#cerrar{width:44px;height:44px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.2rem;font-weight:800}
+#lineas{flex:1;overflow:auto;overscroll-behavior:contain;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.lin{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;background:#fff;border:var(--borde);border-radius:16px;padding:10px}
 .lin img{width:56px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--tinta)}
 .lin h4{margin:0;font:600 1.05rem/1.2 Fredoka,sans-serif}
 .lin small{font-weight:700;color:#7b5b46}
@@ -100,21 +104,47 @@ body.abierto #cajon{translate:0 0;visibility:visible}
 .ctl .quitar{width:auto;border-radius:999px;padding:0 12px;font-size:.85rem}
 .ctl .pr{margin-left:auto;font:600 1.1rem Fredoka,sans-serif}
 .vacio{text-align:center;padding:40px 10px}
-#pie{padding:16px 18px;border-top:var(--borde);display:grid;gap:12px}
+#pie{padding:16px 18px max(16px,env(safe-area-inset-bottom));border-top:var(--borde);display:grid;gap:12px}
 #pie .tot{display:flex;justify-content:space-between;font:600 1.4rem Fredoka,sans-serif}
 #pie .btn[aria-disabled=true]{opacity:.5;pointer-events:none}
-#aviso{position:fixed;left:50%;top:78px;translate:-50% -150px;background:var(--tinta);color:#fff;padding:10px 20px;border-radius:999px;z-index:40;transition:translate .3s;pointer-events:none}
+#aviso{position:fixed;left:50%;top:calc(78px + env(safe-area-inset-top));translate:-50% calc(-100% - 200px);width:max-content;max-width:calc(100% - 32px);text-align:center;background:var(--tinta);color:#fff;padding:10px 20px;border-radius:20px;z-index:40;transition:translate .3s;pointer-events:none}
 #aviso.ver{translate:-50% 0}
 footer{background:var(--tinta);color:#fff;padding:34px 0;text-align:center}
 footer p{margin:6px 0}
-@media(max-width:720px){.hero .wrap{grid-template-columns:1fr}.hero img{width:130px;order:-1;margin:0}.rejilla{gap:26px}}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr 190px}}
+@media(max-width:720px){
+.hero{padding:26px 0 18px}
+.hero .wrap{grid-template-columns:1fr;gap:16px}
+.hero img{width:110px;order:-1;margin:0}
+.hero p.sub{font-size:1.08rem}
+.buscar input{font-size:1.05rem;padding:14px 48px 14px 50px;box-shadow:4px 4px 0 var(--azul)}
+.tit{margin:18px 0 16px}.tit h2{font-size:1.6rem}
+.grupo{margin-bottom:30px}.grupo-tit h3{font-size:1.3rem}
+.rejilla{gap:26px;padding-bottom:36px}
+footer{padding:28px 0}}
+@media(max-width:480px){
+body{font-size:1rem}
+header .wrap{height:60px}
+.marca{font-size:1.15rem}.marca img{width:40px;height:40px}
+#btnCarrito{padding:8px 14px}
+.card{border-radius:22px;box-shadow:5px 5px 0 var(--c)}
+.rejilla{gap:24px}
+.body{padding:14px}
+#aviso{top:calc(68px + env(safe-area-inset-top))}}
+@media(max-width:380px){.tx{display:none}.marca{font-size:1.05rem}}
+@media(pointer:coarse){
+.fl{width:44px;height:44px}
+.ctl button{width:40px;height:40px}
+.fmt button,.fmt span{padding:10px 4px}
+.btn{padding:13px 16px}
+.mas{padding:8px 0;margin:-8px 0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
-  <a class="marca" href="#"><img src="logo.png" alt="">Mi Rincón de Guías</a>
-  <button id="btnCarrito" aria-label="Abrir carrito">🛒 Carrito <span id="cuenta">0</span></button>
+  <a class="marca" href="#"><img src="logo.png" alt=""><span>Mi Rincón de Guías</span></a>
+  <button id="btnCarrito" aria-label="Abrir carrito">🛒 <span class="tx">Carrito</span> <span id="cuenta">0</span></button>
 </div></header>
 
 <main>
@@ -122,9 +152,9 @@ footer p{margin:6px 0}
   <div>
     <h1 id="titulo" aria-label="Guías para aprender jugando">Guías para aprender jugando</h1>
     <p class="sub">Guías infantiles y educativas en formato digital o impreso. ¿No ves la que buscas? Te la hacemos a tu medida.</p>
-    <form class="buscar" role="search" onsubmit="return false">
+    <form class="buscar" role="search" onsubmit="document.activeElement.blur();return false">
       <svg viewBox="0 0 24 24" fill="none" stroke="#4A2E1F" stroke-width="3" stroke-linecap="round"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/></svg>
-      <input id="q" type="search" autocomplete="off" placeholder="Busca por tema, edad o palabra…" aria-label="Buscar guías">
+      <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Busca por tema, edad o palabra…" aria-label="Buscar guías">
       <button id="limpiar" type="button" aria-label="Borrar búsqueda">✕</button>
     </form>
   </div>
