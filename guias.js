@@ -257,30 +257,6 @@ window.GUIAS = [
   ]
  },
  {
-  "titulo": "Pregrafismo: Mis Primeros Trazos",
-  "categoria": [
-   "Lengua Española"
-  ],
-  "descripcion": "Cuaderno de lengua española con trazos de pregrafismo para preparar la mano antes de escribir letras y números.",
-  "digital": 1.99,
-  "impreso": 355,
-  "img": "guias/pregrafismo-mis-primeros-trazos/001_portada.jpg",
-  "imgs": [
-   "guias/pregrafismo-mis-primeros-trazos/001_portada.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/002_pagina_1.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/003_pagina_2.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/004_pagina_3.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/005_pagina_4.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/006_pagina_5.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/007_pagina_6.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/008_pagina_7.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/009_pagina_8.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/010_pagina_9.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/011_pagina_10.jpg",
-   "guias/pregrafismo-mis-primeros-trazos/012_certificado.jpg"
-  ]
- },
- {
   "titulo": "Restas hasta 20",
   "categoria": [
    "Matemáticas"
