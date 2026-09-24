@@ -1,5 +1,0 @@
-titulo: El Abecedario Divertido
-categoria: Caligrafía, Lengua Española
-precio digital: 1.99
-descripcion: Cuaderno de lengua española para aprender todas las letras del abecedario con actividades divertidas, una por cada letra.
-precio impresa: 715
