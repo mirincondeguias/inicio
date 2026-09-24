@@ -23,7 +23,8 @@ window.GUIAS = [
  {
   "titulo": "El Abecedario Divertido",
   "categoria": [
-   "Lengua Española"
+   "Lengua Española",
+   "Caligrafía"
   ],
   "descripcion": "Cuaderno de lengua española para aprender todas las letras del abecedario con actividades divertidas, una por cada letra.",
   "digital": 1.99,
