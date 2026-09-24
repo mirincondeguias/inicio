@@ -44,6 +44,9 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .buscar input::-webkit-search-cancel-button{display:none}
 .buscar svg{position:absolute;left:18px;top:50%;translate:0 -50%;width:26px;height:26px;pointer-events:none}
 #limpiar{position:absolute;right:6px;top:50%;translate:0 -50%;width:40px;height:40px;border:0;border-radius:50%;background:var(--crema);color:var(--tinta);font-size:1.2rem;font-weight:800;display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chips button{min-height:40px;padding:5px 14px;border:var(--borde);border-radius:999px;background:#fff;color:var(--tinta);font-weight:800;font-size:.95rem}
+.chips button[aria-pressed=true]{background:var(--gc);color:#fff;box-shadow:2px 2px 0 var(--tinta)}
 /* catálogo */
 .tit{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:26px 0 22px}
 .tit h2{font-size:1.9rem}
@@ -154,9 +157,10 @@ header .wrap{height:60px}
     <p class="sub">Guías infantiles y educativas en formato digital o impreso. ¿No ves la que buscas? Hacemos la que necesitas.</p>
     <form class="buscar" role="search" onsubmit="document.activeElement.blur();return false">
       <svg viewBox="0 0 24 24" fill="none" stroke="#4A2E1F" stroke-width="3" stroke-linecap="round"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/></svg>
-      <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Busca por tema, edad o palabra…" aria-label="Buscar guías">
+      <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Busca por tema, edad o categoría…" aria-label="Buscar guías">
       <button id="limpiar" type="button" aria-label="Borrar búsqueda">✕</button>
     </form>
+    <div class="chips" id="cats" role="group" aria-label="Filtrar por categoría"></div>
   </div>
   <img src="logo.png" alt="Logo de Mi Rincón de Guías">
 </div></section>
@@ -216,10 +220,16 @@ function cerca(q,ws){let b=0;for(const w of ws){let s=0;
   if(w==q)s=3;else if(q.length>2&&(w.startsWith(q)||(q.startsWith(w)&&w.length>3)))s=2.2;
   else if(q.length>3&&ed(q,w)<=(q.length>6?2:1))s=1.6;
   b=Math.max(b,s)}return b}
-G.forEach(g=>{g.T=toks(g.titulo);g.D=toks(g.descripcion)});
+const catsDe=g=>{const c=[].concat(g.categoria||[]);return c.length?c:['Otras guías']};
+G.forEach(g=>{g.T=toks(g.titulo);g.D=toks(g.descripcion);g.C=toks([].concat(g.categoria||[]).join(' '))});
+const TODAS=(()=>{const s=new Set();G.forEach(g=>catsDe(g).forEach(c=>s.add(c)));return[...CATS_ORDEN.filter(c=>s.has(c)),...[...s].filter(c=>!CATS_ORDEN.includes(c))]})();
+let catSel=null;
+const altsDe=q=>[q,...(SIN[q]?SIN[q].split(' ').map(stem):[])];
+/* categorías nombradas en la búsqueda (con sinónimos): "mate", "religión", "trazo"… */
+const catsQ=qs=>TODAS.filter(c=>{const t=toks(c);return qs.some(q=>altsDe(q).some(a=>cerca(a,t)>=2.2))});
 function puntos(g,qs){let t=0,ok=0;for(const q of qs){
-  const alts=[q,...(SIN[q]?SIN[q].split(' ').map(stem):[])];let b=0;
-  alts.forEach((a,i)=>{const k=i?.6:1;b=Math.max(b,cerca(a,g.T)*2*k,cerca(a,g.D)*k)});
+  const alts=altsDe(q);let b=0;
+  alts.forEach((a,i)=>{const k=i?.6:1;b=Math.max(b,cerca(a,g.T)*2*k,cerca(a,g.C)*2*k,cerca(a,g.D)*k)});
   if(b>0){ok++;t+=b}}
   return ok?t+(ok==qs.length?5:0):0}
 
@@ -249,13 +259,15 @@ function personalizada(q){
 function pintar(){
   const q=$('#q').value.trim(), qs=toks(q);
   let lista=G.map((g,i)=>({g,i,s:qs.length?puntos(g,qs):1})).filter(x=>x.s>0);
+  if(catSel)lista=lista.filter(x=>catsDe(x.g).includes(catSel));
   if(qs.length)lista.sort((a,b)=>b.s-a.s);
+  const foco=catSel?[catSel]:qs.length?catsQ(qs):[], et=catSel?` en «${catSel}»`:'';
   $('#limpiar').style.display=q?'block':'none';
-  $('#estado').textContent=!q?`${G.length} guía${G.length==1?'':'s'}`:lista.length?`${lista.length} resultado${lista.length==1?'':'s'} para «${q}»`:`Sin resultados para «${q}»`;
+  $('#estado').textContent=!q?`${lista.length} guía${lista.length==1?'':'s'}${et}`:lista.length?`${lista.length} resultado${lista.length==1?'':'s'} para «${q}»${et}`:`Sin resultados para «${q}»${et}`;
   /* agrupar por categoría (una guía puede pertenecer a varias); respeta el orden de relevancia dentro de cada grupo */
   const porCat={};
-  lista.forEach(x=>{const cs=(x.g.categoria&&x.g.categoria.length?x.g.categoria:['Otras guías']);
-    cs.forEach(c=>{(porCat[c]=porCat[c]||[]).push(x)})});
+  lista.forEach(x=>{const todas=catsDe(x.g),cs=todas.filter(c=>foco.includes(c));
+    (cs.length?cs:todas).forEach(c=>{(porCat[c]=porCat[c]||[]).push(x)})});
   const ordenCats=[...CATS_ORDEN.filter(c=>porCat[c]),...Object.keys(porCat).filter(c=>!CATS_ORDEN.includes(c))];
   $('#rejilla').innerHTML=ordenCats.map(c=>
     `<section class="grupo" style="--gc:${catColor(c)}"><div class="grupo-tit"><h3>${esc(c)}</h3><span class="n">${porCat[c].length}</span></div>
@@ -323,6 +335,11 @@ $('#q').addEventListener('input',pintar);
 $('#limpiar').onclick=()=>{$('#q').value='';pintar();$('#q').focus()};
 $('#waPie').href=wa('¡Hola! Quisiera información sobre las guías de Mi Rincón de Guías.');
 {let n=0;$('#titulo').innerHTML=$('#titulo').textContent.split(' ').map(w=>`<span class="p" aria-hidden="true">${[...w].map(c=>`<span class="l" style="--i:${n++};color:${COL[n%5]}">${c}</span>`).join('')}</span>`).join(' ')}
+$('#cats').innerHTML=`<button type="button" data-cat="" aria-pressed="true" style="--gc:var(--tinta)">Todas</button>`+TODAS.map(c=>`<button type="button" data-cat="${esc(c)}" aria-pressed="false" style="--gc:${catColor(c)}">${esc(c)}</button>`).join('');
+$('#cats').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;
+  catSel=b.dataset.cat&&b.dataset.cat!==catSel?b.dataset.cat:null;
+  document.querySelectorAll('#cats button').forEach(x=>x.setAttribute('aria-pressed',(x.dataset.cat||null)===catSel));
+  pintar();if(catSel)$('#catalogo').scrollIntoView()});
 pintar();cajon();
 </script>
 </body>
