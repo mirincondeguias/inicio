@@ -29,9 +29,10 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .acciones{flex:none;display:flex;align-items:center;gap:10px}
 #btnMios{flex:none;min-height:44px;display:flex;align-items:center;gap:8px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 16px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
 #btnMios:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
-#veloM{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:32;display:none}
-#modal{position:fixed;top:50%;left:50%;translate:-50% -50%;width:min(420px,92vw);max-height:88vh;overflow-y:auto;background:var(--crema);border:var(--borde);border-radius:22px;z-index:33;display:none;box-shadow:7px 7px 0 var(--tinta)}
-body.modalAbierto #veloM,body.modalAbierto #modal{display:block}
+#veloM{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:32;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#modal{position:fixed;top:50%;left:50%;translate:-50% -46%;width:min(420px,92vw);max-height:88vh;overflow-y:auto;background:var(--crema);border:var(--borde);border-radius:22px;z-index:33;opacity:0;visibility:hidden;box-shadow:7px 7px 0 var(--tinta);transition:translate .25s,opacity .25s,visibility .25s}
+body.modalAbierto #veloM{opacity:1;visibility:visible}
+body.modalAbierto #modal{translate:-50% -50%;opacity:1;visibility:visible}
 body.modalAbierto{overflow:hidden}
 html:has(body.modalAbierto){overflow:hidden}
 #modal header{position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
@@ -64,9 +65,20 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .buscar input::-webkit-search-cancel-button{display:none}
 .buscar svg{position:absolute;left:18px;top:50%;translate:0 -50%;width:26px;height:26px;pointer-events:none}
 #limpiar{position:absolute;right:6px;top:50%;translate:0 -50%;width:40px;height:40px;border:0;border-radius:50%;background:var(--crema);color:var(--tinta);font-size:1.2rem;font-weight:800;display:none}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.chips button{min-height:40px;padding:5px 14px;border:var(--borde);border-radius:999px;background:#fff;color:var(--tinta);font-weight:800;font-size:.95rem}
-.chips button[aria-pressed=true]{background:var(--gc);color:#fff;box-shadow:2px 2px 0 var(--tinta)}
+.chips{display:flex;align-items:flex-start;gap:8px;margin-top:16px}
+.chips>button{min-height:40px;padding:5px 14px;border:var(--borde);border-radius:999px;background:#fff;color:var(--tinta);font-weight:800;font-size:.95rem}
+.chips>button[aria-pressed=true]{background:var(--gc);color:#fff;box-shadow:2px 2px 0 var(--tinta)}
+.cat-drop{position:relative}
+#catBtn{display:flex;align-items:center;gap:7px;min-height:40px;padding:5px 14px;border:var(--borde);border-radius:999px;background:#fff;color:var(--tinta);font-weight:800;font-size:.95rem}
+#catBtn.activo{background:var(--gc);color:#fff;box-shadow:2px 2px 0 var(--tinta)}
+#catBtn .fl-ico{font-size:.75rem;transition:transform .2s}
+#catBtn[aria-expanded=true] .fl-ico{transform:rotate(180deg)}
+#catList{position:absolute;top:calc(100% + 8px);left:0;z-index:15;min-width:230px;max-width:min(320px,80vw);max-height:280px;overflow-y:auto;background:#fff;border:var(--borde);border-radius:16px;box-shadow:5px 5px 0 var(--tinta);padding:8px;display:flex;flex-direction:column;gap:2px}
+#catList[hidden]{display:none}
+#catList button{text-align:left;min-height:42px;padding:8px 12px;border:0;border-radius:10px;background:transparent;color:var(--tinta);font-weight:800;font-size:.95rem;display:flex;align-items:center;gap:10px;width:100%}
+#catList button::before{content:'';width:11px;height:11px;border-radius:50%;background:var(--gc);flex:none}
+#catList button[aria-selected=true]{background:var(--crema)}
+#catList button:hover,#catList button:focus-visible{background:#f3e9d8}
 /* catálogo */
 .tit{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:26px 0 22px}
 .tit h2{font-size:1.9rem}
@@ -78,12 +90,14 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .grupo-tit .n{background:var(--gc,var(--azul));color:#fff;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:800}
 .grupo-tit::after{content:'';flex:1;height:3px;background:var(--gc,var(--azul));border-radius:3px;opacity:.35}
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:30px;padding-bottom:50px}
+.rejilla:has(>.card:only-child){grid-template-columns:1fr}
 .card{--c:var(--azul);display:flex;flex-direction:column;background:#fff;border:var(--borde);border-radius:26px;box-shadow:7px 7px 0 var(--c);overflow:hidden}
 .card .img{background:var(--c);padding:10px 10px 0;border-bottom:var(--borde)}
 .car{position:relative;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
 .pistas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:auto;overscroll-behavior-x:contain}
 .pistas::-webkit-scrollbar{display:none}
-.pistas img{flex:0 0 100%;scroll-snap-align:start;display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.pistas img{flex:0 0 100%;scroll-snap-align:start;display:block;width:100%;aspect-ratio:3/4;object-fit:cover;cursor:pointer}
+.pagbadge{position:absolute;top:8px;left:8px;z-index:2;background:var(--tinta);color:#fff;font-weight:800;font-size:.8rem;line-height:1;padding:5px 10px;border-radius:999px;box-shadow:2px 2px 0 rgba(0,0,0,.18);pointer-events:none}
 .fl{position:absolute;top:50%;translate:0 -50%;width:36px;height:36px;border:2px solid var(--tinta);border-radius:50%;background:rgba(255,247,232,.92);color:var(--tinta);font-weight:800;font-size:1.3rem;line-height:1;padding:0}
 .fl.prev{left:6px}.fl.next{right:6px}
 .body{display:flex;flex-direction:column;gap:10px;padding:16px;flex:1}
@@ -103,10 +117,13 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .wa{background:var(--wa)}
 /* mis productos: misma rejilla/tarjeta del catálogo, sin ventana flotante */
 .mio-card .fmt{display:none}
-.mio-portada{cursor:pointer;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
+.mio-portada{position:relative;cursor:pointer;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
 .mio-portada img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
-#volverCat{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
-#volverCat:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
+.tit-acciones{display:flex;gap:10px;flex-wrap:wrap}
+#volverCat,#salirCuenta{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
+#volverCat:active,#salirCuenta:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
+#salirCuenta{background:var(--crema)}
+#salirCuenta[hidden]{display:none}
 #miosEmailBox .custom{--c:var(--azul)}
 #miosEmailBox input{width:100%;padding:12px;border:var(--borde);border-radius:12px;margin-bottom:10px;font:inherit;box-sizing:border-box}
 /* previsualización de todas las páginas del PDF (superpuesta, como una lupa sobre la tarjeta) */
@@ -118,9 +135,11 @@ html:has(body.previaAbierta){overflow:hidden}
 #previaPDF header{flex:none;position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-radius:19px 19px 0 0}
 #previaPDF h2{font-size:1.3rem}
 #previaCerrar{flex:none;width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.1rem;font-weight:800}
-#previaBody{flex:1;min-height:0;padding:0}
+#previaBody{flex:1;min-height:0;padding:0;overflow-y:auto}
 #previaBody iframe{width:100%;height:100%;min-height:70vh;border:0;display:block}
 #previaBody p{padding:18px;margin:0}
+.previaImgs{display:flex;flex-direction:column;gap:12px;padding:14px}
+.previaImgs img{width:100%;display:block;border-radius:12px;border:var(--borde)}
 #previaPie{flex:none;padding:14px 18px max(14px,env(safe-area-inset-bottom));border-top:var(--borde)}
 #previaPie:empty{display:none;border:0;padding:0}
 #previaPie .btn{box-sizing:border-box}
@@ -146,6 +165,11 @@ body.abierto #cajon{translate:0 0;visibility:visible}
 #cajon header{position:static;padding:max(14px,env(safe-area-inset-top)) 18px 14px;display:flex;justify-content:space-between;align-items:center;height:auto}
 #cajon h2{font-size:1.5rem}
 #cerrar{width:44px;height:44px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.2rem;font-weight:800}
+#cuentaCarrito:empty{display:none}
+.cta-cuenta{margin:14px 18px 0;background:#fff;border:var(--borde);border-radius:16px;padding:12px}
+.cta-cuenta p{margin:0 0 8px;font-size:.95rem}
+.cta-cuenta input{width:100%;padding:11px;border:var(--borde);border-radius:12px;margin-bottom:8px;font:inherit;box-sizing:border-box}
+.cta-cuenta .btn{width:100%;box-sizing:border-box;padding:10px}
 #lineas{padding:14px 18px;display:flex;flex-direction:column;gap:12px}
 .lin{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;background:#fff;border:var(--borde);border-radius:16px;padding:10px}
 .lin img{width:56px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--tinta)}
@@ -174,16 +198,23 @@ footer p{margin:6px 0}
 .buscar input{font-size:1.05rem;padding:14px 48px 14px 50px;box-shadow:4px 4px 0 var(--azul)}
 .tit{margin:18px 0 16px}.tit h2{font-size:1.6rem}
 .grupo{margin-bottom:30px}.grupo-tit h3{font-size:1.3rem}
-.rejilla{gap:26px;padding-bottom:36px}
+.rejilla{grid-template-columns:repeat(2,1fr);gap:16px;padding-bottom:36px}
+.fl{display:none}
 footer{padding:28px 0}}
 @media(max-width:480px){
 body{font-size:1rem}
 header .wrap{height:60px}
 .marca{font-size:1.15rem}.marca img{width:40px;height:40px}
 #btnCarrito{padding:8px 14px}
-.card{border-radius:22px;box-shadow:5px 5px 0 var(--c)}
-.rejilla{gap:24px}
-.body{padding:14px}
+.card{border-radius:18px;box-shadow:4px 4px 0 var(--c)}
+.rejilla{gap:12px}
+.body{padding:10px;gap:6px}
+.body h3{font-size:1.05rem}
+.desc{font-size:.85rem;-webkit-line-clamp:2}
+.fmt b{font-size:.95rem}
+.fmt button,.fmt span{padding:6px 3px;font-size:.92rem}
+.tit-acciones{gap:8px}
+#volverCat,#salirCuenta{padding:6px 12px;font-size:.88rem}
 #aviso{top:calc(68px + env(safe-area-inset-top))}}
 @media(max-width:380px){.tx{display:none}.marca{font-size:1.05rem}}
 @media(pointer:coarse){
@@ -241,7 +272,12 @@ header .wrap{height:60px}
 </section>
 
 <section class="wrap" id="misProductos" hidden>
-  <div class="tit"><h2>Mis productos</h2><button id="volverCat" type="button">← Volver al catálogo</button></div>
+  <div class="tit"><h2>Mis productos</h2>
+    <div class="tit-acciones">
+      <button id="salirCuenta" type="button" hidden>Salir de mi cuenta</button>
+      <button id="volverCat" type="button">← Volver al catálogo</button>
+    </div>
+  </div>
   <div id="miosEmailBox"></div>
   <div id="miosRejilla"></div>
 </section>
@@ -257,6 +293,7 @@ header .wrap{height:60px}
 <aside id="cajon" aria-label="Carrito de compras">
   <header><h2>Tu carrito</h2><button id="cerrar" aria-label="Cerrar carrito">✕</button></header>
   <div id="cuerpo">
+  <div id="cuentaCarrito"></div>
   <div id="lineas"></div>
   <div id="pie"><div class="tot"><span>Total</span><span id="total"></span></div>
   <div id="pp-cart-box"></div>
@@ -278,7 +315,7 @@ header .wrap{height:60px}
 </aside>
 
 <script src="guias.js"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=BAAscGDV97LVWgWVJ-78Mk_9alENONvfxUvJ1VkVrhkmovng1HtMySNf-qDpCTmuLlRFsDRAhrgerYDLiQ&currency=USD&intent=capture&components=buttons"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=BAAkAWM0guncXXc4kDpu9yxA4RGpdN43MhNdoRw0pynRCeBTtZlMJ9wvLQIgXhhYOyXBnI4TYkIywfoDTE&currency=USD&intent=capture&components=buttons&locale=es_XC"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000};
@@ -291,7 +328,11 @@ const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000}
       creado_en (timestamptz default now()) y UNIQUE(email, producto_id).
    5) Crea la tabla "enlaces" con: titulo (text, primary key) y link (text) — ahí guardas,
       por cada guía, el link de descarga del PDF. El título debe escribirse igual que en tu
-      catálogo (mayúsculas/minúsculas no importan, mira más abajo cómo se compara). */
+      catálogo (mayúsculas/minúsculas no importan, mira más abajo cómo se compara).
+   6) Crea la tabla "carritos" con: email (text, primary key), carrito (jsonb) y
+      actualizado_en (timestamptz default now()) — ahí se guarda el carrito de cada
+      cliente que decida vincularlo a su correo, para que no lo pierda si cambia de
+      dispositivo o borra los datos del navegador. */
 const SUPA_URL='https://ihenmezfdlnluvfjbzje.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZW5tZXpmZGxubHV2ZmpiemplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0MjY3MDIsImV4cCI6MjEwNjAwMjcwMn0.aGcPbn8KQBTkRNU33y2MHOTizWv3BXrFnNXsFYifm2g';
 const supa=(SUPA_URL.includes('TU-PROYECTO')||typeof window.supabase=='undefined')?null:window.supabase.createClient(SUPA_URL,SUPA_KEY);
@@ -362,7 +403,7 @@ function puntos(g,qs){let t=0,ok=0;for(const q of qs){
 
 /* pintar catálogo */
 function carrusel(g){const im=g.imgs&&g.imgs.length?g.imgs:[g.img],n=im.length;
-  return `<div class="car"><div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
+  return `<div class="car">${n?`<span class="pagbadge">${n} pág.</span>`:''}<div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
 function tarjeta(g,i,cat){
   const f=fmt[i]||(fmt[i]=g.digital!=null?'d':'p');
   const en=cart[i+'|'+f]||0, bloqueada=f=='d'&&en;
@@ -378,7 +419,7 @@ function tarjeta(g,i,cat){
    <button class="btn add" data-a="add" ${bloqueada?'disabled':''}>${bloqueada?'✓ Ya está en tu carrito':'Añadir al carrito'}</button>
    ${en&&f=='p'?`<p class="enc">${en} en tu carrito</p>`:''}
    ${f=='d'
-     ?`<button class="btn comprar" type="button" data-a="comprar">Comprar ahora</button><div class="pp-box" id="pp-${i}"></div>`
+     ?`<button class="btn comprar" type="button" data-a="comprar">Comprar ahora</button>`
      :`<a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato ${NOM[f].toLowerCase()}.`)}">Cotizar por WhatsApp</a>`}
    </div></article>`}
 function personalizada(q){
@@ -405,26 +446,15 @@ function pintar(){
   document.querySelectorAll('.pistas').forEach(c=>{const x=posG[c.closest('.card').dataset.i]||0;if(x)ir(c,x,false)});
 }
 $('#rejilla').addEventListener('click',e=>{
+  const imgEl=e.target.closest('.pistas img');
+  if(imgEl){const ic=e.target.closest('.card').dataset.i;abrirPreviaCatalogo(G[ic],ic);return}
   const b=e.target.closest('[data-a]');if(!b)return;
   const i=b.closest('.card').dataset.i,g=G[i],a=b.dataset.a;
   if(a=='ir'||a=='prev'||a=='next'){const c=b.closest('.card').querySelector('.pistas'),n=c.children.length;
     ir(c,a=='ir'?+b.dataset.n:(pos(c)+(a=='next'?1:-1)+n)%n);c._p=Date.now()+5000;return}
   if(a=='mas'){const d=b.previousElementSibling.classList.toggle('abierta');b.textContent=d?'Ver menos':'Ver más';b.setAttribute('aria-expanded',d);return}
   if(a=='fmt'){fmt[i]=b.dataset.f;pintar();return}
-  if(a=='comprar'){
-    const box=document.getElementById('pp-'+i);
-    const abierta=box.classList.toggle('abierta');
-    if(abierta&&!box.dataset.pp){
-      box.dataset.pp='1';
-      renderPPButton(box,precio(g,'d'),g.titulo,details=>{
-        const email=details.payer&&details.payer.email_address||'';
-        guardarCompra(email,[g]).then(()=>pantallaCompra(g));
-        box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
-        aviso(`«${g.titulo}» comprada. ¡Gracias!`);
-      });
-    }
-    return;
-  }
+  if(a=='comprar'){abrirComprarModal(g);return}
   const k=i+'|'+fmt[i];
   if(fmt[i]=='d'&&cart[k])return;
   cart[k]=fmt[i]=='d'?1:(cart[k]||0)+1;
@@ -432,11 +462,26 @@ $('#rejilla').addEventListener('click',e=>{
   $('#cuenta').classList.remove('salto');void $('#cuenta').offsetWidth;$('#cuenta').classList.add('salto');
 });
 
-/* PayPal: crea un botón de pago para un monto y una descripción dadas */
+/* ======================================================================
+   PAYPAL — el SDK se carga de una sola vez al abrir la página (script fijo
+   arriba, junto a guias.js), igual que en la versión que sí funcionaba.
+   Si algún día cambias el Client ID, se hace en esa etiqueta <script>.
+   ====================================================================== */
+
+/* Dibuja un botón de PayPal dentro de "container" por el monto indicado.
+   alPagar(details) se llama cuando el pago se aprueba y se captura. */
 function renderPPButton(container,amount,descripcion,alPagar){
-  if(typeof paypal=='undefined'){container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p>';return}
   const val=parseFloat(String(amount).replace(/[^0-9.,-]/g,'').replace(',','.'));
-  if(!(val>0)){container.innerHTML='<p class="pp-ok" style="color:#c0392b">Precio inválido para este producto. Revisa el número en guias.js (debe ser algo como 0.99, con punto y sin símbolos).</p>';return}
+  if(!(val>0)){
+    container.innerHTML='<p class="pp-ok" style="color:#c0392b">Precio inválido para este producto. Revisa el número en guias.js (debe ser algo como 0.99, con punto y sin símbolos).</p>';
+    return;
+  }
+  if(typeof paypal=='undefined'){
+    container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p><button type="button" class="btn" data-a="reintentarPP">Reintentar</button>';
+    const b=container.querySelector('[data-a="reintentarPP"]');
+    if(b)b.onclick=()=>location.reload();
+    return;
+  }
   container.innerHTML='';
   paypal.Buttons({
     style:{layout:'vertical',color:'gold',shape:'pill',label:'pay'},
@@ -446,8 +491,14 @@ function renderPPButton(container,amount,descripcion,alPagar){
       application_context:{shipping_preference:'NO_SHIPPING'}
     }),
     onApprove:(d,actions)=>actions.order.capture().then(alPagar),
-    onError:err=>{console.error(err);container.innerHTML='<p class="pp-ok" style="color:#c0392b">Ocurrió un problema con PayPal. Intenta de nuevo o revisa la consola del navegador.</p>'}
-  }).render(container).catch(err=>{console.error(err);container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo mostrar el botón de pago. Revisa la consola del navegador (F12) para más detalle.</p>'});
+    onError:err=>{
+      console.error('PayPal onError:',err);
+      container.innerHTML='<p class="pp-ok" style="color:#c0392b">Ocurrió un problema con PayPal. Intenta de nuevo o revisa la consola del navegador.</p>';
+    }
+  }).render(container).catch(err=>{
+    console.error('PayPal render:',err);
+    container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo mostrar el botón de pago. Revisa la consola del navegador (F12) para más detalle.</p>';
+  });
 }
 /* PayPal: botón para cobrar el total de productos digitales del carrito */
 let ppCartTot=null;
@@ -476,6 +527,23 @@ function abrirModal(titulo,html){
 }
 function cerrarModal(){document.body.classList.remove('modalAbierto')}
 $('#modalCerrar').onclick=$('#veloM').onclick=cerrarModal;
+
+/* al pulsar "Comprar ahora" en el catálogo: ventana flotante con solo ese producto y su botón de pago */
+function abrirComprarModal(g){
+  const im=g.imgs&&g.imgs.length?g.imgs:[g.img];
+  abrirModal('Comprar guía',`
+    <img src="${im[0]}" alt="${esc(g.titulo)}">
+    <h3>${esc(g.titulo)}</h3>
+    <p style="text-align:center;margin:-8px 0 14px;font:600 1.25rem Fredoka,sans-serif">${money(g.digital,'d')}</p>
+    <div class="pp-box abierta" id="pp-modal"></div>
+  `);
+  renderPPButton($('#pp-modal'),g.digital,g.titulo,details=>{
+    const email=details.payer&&details.payer.email_address||'';
+    guardarCompra(email,[g]).then(()=>pantallaCompra(g));
+    $('#pp-modal').innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
+    aviso(`«${g.titulo}» comprada. ¡Gracias!`);
+  });
+}
 
 /* guarda en Supabase qué guías digitales compró un correo */
 async function guardarCompra(email,guias){
@@ -523,8 +591,9 @@ function portadaDe(c,g){
   return c.img||'';
 }
 function tarjetaMia(c,idx){
+  const pag=c._g&&c._g.imgs&&c._g.imgs.length?c._g.imgs.length:(c._g&&c._g.img?1:0);
   return `<article class="card mio-card" style="--c:${COL[idx%COL.length]}" data-i="m${idx}">
-   <div class="img"><div class="mio-portada" data-a="verPaginas"><img src="${c._portada}" alt="Portada de ${esc(c.titulo)}" loading="lazy"></div></div>
+   <div class="img"><div class="mio-portada" data-a="verPaginas">${pag?`<span class="pagbadge">${pag} pág.</span>`:''}<img src="${c._portada}" alt="Portada de ${esc(c.titulo)}" loading="lazy"></div></div>
    <div class="body"><h3>${esc(c.titulo)}</h3>
    <button class="btn comprar" type="button" data-a="verPaginas">Ver todas las páginas</button>
    ${c._url?`<a class="btn add" href="${c._url}" target="_blank" rel="noopener" download>Descargar</a>`:'<span class="enc" style="text-align:center">Ya registramos tu compra. Pronto activaremos tu descarga.</span>'}
@@ -540,6 +609,7 @@ function cajaEmail(){
 }
 async function cargarMisProductos(email){
   email=email||localStorage.getItem('mrg-email')||'';
+  $('#salirCuenta').hidden=!email;
   const rej=$('#miosRejilla');
   if(!email){
     $('#miosEmailBox').innerHTML=cajaEmail();rej.innerHTML='';
@@ -563,6 +633,33 @@ async function cargarMisProductos(email){
   }));
   rej.innerHTML=`<div class="grupo"><div class="rejilla">${MIOS.map((c,idx)=>tarjetaMia(c,idx)).join('')}</div></div>`;
 }
+/* vista previa (tipo PDF) de una guía del catálogo: todas sus páginas/imágenes, con el botón de comprar fijo abajo */
+function abrirPreviaCatalogo(g,i){
+  const im=g.imgs&&g.imgs.length?g.imgs:[g.img];
+  $('#previaTit').textContent=g.titulo;
+  $('#previaBody').innerHTML=`<div class="previaImgs">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>`;
+  const f=fmt[i]||(fmt[i]=g.digital!=null?'d':'p');
+  if(f=='d'){
+    $('#previaPie').innerHTML=`<button class="btn comprar" type="button" id="previaComprar">Comprar ahora — ${money(g.digital,'d')}</button><div class="pp-box" id="pp-previa"></div>`;
+    $('#previaComprar').onclick=()=>{
+      const box=$('#pp-previa');
+      const abierta=box.classList.toggle('abierta');
+      if(abierta&&!box.dataset.pp){
+        box.dataset.pp='1';
+        renderPPButton(box,g.digital,g.titulo,details=>{
+          const email=details.payer&&details.payer.email_address||'';
+          guardarCompra(email,[g]).then(()=>pantallaCompra(g));
+          box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
+          aviso(`«${g.titulo}» comprada. ¡Gracias!`);
+          setTimeout(cerrarPreviaPDF,900);
+        });
+      }
+    };
+  }else{
+    $('#previaPie').innerHTML=`<a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato impreso.`)}">Cotizar por WhatsApp — ${money(g.impreso,'p')}</a>`;
+  }
+  document.body.classList.add('previaAbierta');
+}
 function abrirPreviaPDF(item){
   $('#previaTit').textContent=item.titulo;
   $('#previaBody').innerHTML=item._preview
@@ -580,10 +677,65 @@ $('#miosRejilla').addEventListener('click',e=>{
 });
 $('#btnMios').onclick=()=>{mostrarVista('mios');cargarMisProductos()};
 $('#volverCat').onclick=()=>mostrarVista('catalogo');
+$('#salirCuenta').onclick=()=>{localStorage.removeItem('mrg-email');MIOS=[];cargarMisProductos('')};
+
+/* === Vincular el carrito a un correo (Supabase) ===
+   El cliente escribe su correo en el carrito y, a partir de ahí, cada cambio se
+   guarda también en la tabla "carritos". Si vuelve a escribir el mismo correo
+   (en este navegador o en otro), su carrito se recupera automáticamente. */
+const emailActual=()=>localStorage.getItem('mrg-email')||'';
+let ppCarritoTimer=null;
+function guardarCarritoRemoto(){
+  const email=emailActual();
+  if(!supa||!email)return;
+  clearTimeout(ppCarritoTimer);
+  ppCarritoTimer=setTimeout(async()=>{
+    try{await supa.from('carritos').upsert({email,carrito:cart,actualizado_en:new Date().toISOString()},{onConflict:'email'})}
+    catch(e){console.error('No se pudo guardar el carrito en Supabase:',e)}
+  },700);
+}
+/* trae el carrito guardado para ese correo y lo combina con el que ya esté abierto aquí */
+async function cargarCarritoRemoto(email){
+  if(!supa||!email)return;
+  try{
+    const{data,error}=await supa.from('carritos').select('carrito').eq('email',email).maybeSingle();
+    if(error||!data||!data.carrito)return;
+    for(const k in data.carrito){
+      const[i,f]=k.split('|');
+      if(!G[i]||precio(G[i],f)==null)continue;
+      cart[k]=f=='d'?1:(cart[k]||0)+(+data.carrito[k]||0);
+    }
+    guardar();pintar();cajon();
+  }catch(e){console.error('No se pudo recuperar el carrito de Supabase:',e)}
+}
+function vincularCarrito(email){
+  if(!email)return;
+  const previo=emailActual();
+  localStorage.setItem('mrg-email',email);
+  if(previo!==email)cargarCarritoRemoto(email);else guardarCarritoRemoto();
+  pintarCuentaCarrito();
+  aviso('Carrito vinculado a tu correo');
+}
+function desvincularCarrito(){localStorage.removeItem('mrg-email');pintarCuentaCarrito()}
+function pintarCuentaCarrito(){
+  const box=$('#cuentaCarrito');if(!box)return;
+  if(!supa){box.innerHTML='';return}
+  const email=emailActual();
+  box.innerHTML=email
+    ?`<div class="cta-cuenta"><p>🔒 Carrito guardado con <b>${esc(email)}</b></p><button type="button" class="btn" id="quitarVinculo">Usar otro correo</button></div>`
+    :`<div class="cta-cuenta"><p>Escribe tu correo y no perderás tu carrito aunque cambies de dispositivo:</p>
+       <input id="carritoEmail" type="email" placeholder="tu@correo.com" autocomplete="email">
+       <button type="button" class="btn add" id="vincularBtn">Guardar mi carrito</button></div>`;
+  const inp=$('#carritoEmail'),btn=$('#vincularBtn'),quitar=$('#quitarVinculo');
+  if(btn)btn.onclick=()=>{const e=inp.value.trim();if(e)vincularCarrito(e)};
+  if(inp)inp.addEventListener('keydown',e=>{if(e.key=='Enter'){e.preventDefault();btn.click()}});
+  if(quitar)quitar.onclick=desvincularCarrito;
+}
 
 /* panel del carrito */
-function cambio(){guardar();pintar();cajon()}
+function cambio(){guardar();pintar();cajon();guardarCarritoRemoto()}
 function cajon(){
+  pintarCuentaCarrito();
   const ks=Object.keys(cart);let totD=0,totP=0,n=0,msgP=[];
   $('#lineas').innerHTML=ks.length?ks.map(k=>{const[i,f]=k.split('|'),g=G[i],q=cart[k],p=precio(g,f);if(f=='d')totD+=p*q;else{totP+=p*q;msgP.push(`• ${g.titulo} (${NOM[f]}) x${q} — ${money(p*q,f)}`)}n+=q;
     return `<div class="lin" data-k="${k}"><img src="${g.img}" alt=""><div><h4>${esc(g.titulo)}</h4><small>${NOM[f]}</small>
@@ -604,7 +756,7 @@ $('#lineas').addEventListener('click',e=>{
   if(c=='+')cart[k]++;else if(c=='-'){if(--cart[k]<1)delete cart[k]}else delete cart[k];cambio()});
 const abrir=v=>{document.body.classList.toggle('abierto',v);if(v){document.querySelectorAll('.pp-box.abierta').forEach(b=>b.classList.remove('abierta'));$('#cerrar').focus()}else $('#btnCarrito').focus()};
 $('#btnCarrito').onclick=()=>abrir(true);$('#cerrar').onclick=$('#velo').onclick=()=>abrir(false);
-addEventListener('keydown',e=>{if(e.key=='Escape'){abrir(false);cerrarModal();cerrarPreviaPDF()}});
+addEventListener('keydown',e=>{if(e.key=='Escape'){abrir(false);cerrarModal();cerrarPreviaPDF();cerrarCats()}});
 let tm;function aviso(t){const a=$('#aviso');a.textContent=t;a.classList.add('ver');clearTimeout(tm);tm=setTimeout(()=>a.classList.remove('ver'),1800)}
 
 /* carrusel: rota solo, se pausa al tocarlo o pasar el mouse, y se puede deslizar */
@@ -632,12 +784,28 @@ $('#q').addEventListener('input',pintar);
 $('#limpiar').onclick=()=>{$('#q').value='';pintar();$('#q').focus()};
 $('#waPie').href=wa('¡Hola! Quisiera información sobre las guías de Mi Rincón de Guías.');
 {let n=0;$('#titulo').innerHTML=$('#titulo').textContent.split(' ').map(w=>`<span class="p" aria-hidden="true">${[...w].map(c=>`<span class="l" style="--i:${n++};color:${COL[n%5]}">${c}</span>`).join('')}</span>`).join(' ')}
-$('#cats').innerHTML=`<button type="button" data-cat="" aria-pressed="true" style="--gc:var(--tinta)">Todas</button>`+TODAS.map(c=>`<button type="button" data-cat="${esc(c)}" aria-pressed="false" style="--gc:${catColor(c)}">${esc(c)}</button>`).join('');
-$('#cats').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;
-  catSel=b.dataset.cat&&b.dataset.cat!==catSel?b.dataset.cat:null;
-  document.querySelectorAll('#cats button').forEach(x=>x.setAttribute('aria-pressed',(x.dataset.cat||null)===catSel));
-  pintar();if(catSel)$('#catalogo').scrollIntoView()});
+$('#cats').innerHTML=`<button type="button" id="catTodas" data-cat="" aria-pressed="true" style="--gc:var(--tinta)">Todas</button>
+<div class="cat-drop"><button type="button" id="catBtn" aria-haspopup="listbox" aria-expanded="false">Categorías <span class="fl-ico">▾</span></button>
+<div id="catList" role="listbox" aria-label="Elegir categoría" hidden>${TODAS.map(c=>`<button type="button" data-cat="${esc(c)}" role="option" aria-selected="false" style="--gc:${catColor(c)}">${esc(c)}</button>`).join('')}</div></div>`;
+function cerrarCats(){$('#catList').hidden=true;$('#catBtn').setAttribute('aria-expanded','false')}
+function pintarCatBtn(){
+  const btn=$('#catBtn');
+  btn.childNodes[0].textContent=(catSel||'Categorías')+' ';
+  btn.classList.toggle('activo',!!catSel);
+  btn.style.setProperty('--gc',catSel?catColor(catSel):'var(--azul)');
+  $('#catTodas').setAttribute('aria-pressed',!catSel);
+  document.querySelectorAll('#catList [data-cat]').forEach(x=>x.setAttribute('aria-selected',x.dataset.cat===catSel));
+}
+function elegirCat(c){
+  catSel=c||null;pintarCatBtn();cerrarCats();pintar();if(catSel)$('#catalogo').scrollIntoView();
+}
+$('#catTodas').onclick=()=>elegirCat(null);
+$('#catBtn').onclick=()=>{const abrir=$('#catList').hidden;if(abrir){$('#catList').hidden=false;$('#catBtn').setAttribute('aria-expanded','true')}else cerrarCats()};
+$('#catList').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;elegirCat(b.dataset.cat)});
+document.addEventListener('click',e=>{if(!e.target.closest('.cat-drop'))cerrarCats()});
+pintarCatBtn();
 pintar();cajon();
+if(emailActual())cargarCarritoRemoto(emailActual());
 </script>
 </body>
 </html>
