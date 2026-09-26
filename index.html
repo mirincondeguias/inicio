@@ -690,8 +690,10 @@ function guardarCarritoRemoto(){
   if(!supa||!email)return;
   clearTimeout(ppCarritoTimer);
   ppCarritoTimer=setTimeout(async()=>{
-    try{await supa.from('carritos').upsert({email,carrito:cart,actualizado_en:new Date().toISOString()},{onConflict:'email'})}
-    catch(e){console.error('No se pudo guardar el carrito en Supabase:',e)}
+    try{
+      const{error}=await supa.from('carritos').upsert({email,carrito:cart,actualizado_en:new Date().toISOString()},{onConflict:'email'});
+      if(error){console.error('No se pudo guardar el carrito en Supabase:',error);aviso('⚠️ No se pudo guardar tu carrito en la nube')}
+    }catch(e){console.error('No se pudo guardar el carrito en Supabase:',e);aviso('⚠️ No se pudo guardar tu carrito en la nube')}
   },700);
 }
 /* trae el carrito guardado para ese correo y lo combina con el que ya esté abierto aquí */
@@ -699,7 +701,8 @@ async function cargarCarritoRemoto(email){
   if(!supa||!email)return;
   try{
     const{data,error}=await supa.from('carritos').select('carrito').eq('email',email).maybeSingle();
-    if(error||!data||!data.carrito)return;
+    if(error){console.error('No se pudo recuperar el carrito de Supabase:',error);return}
+    if(!data||!data.carrito)return;
     for(const k in data.carrito){
       const[i,f]=k.split('|');
       if(!G[i]||precio(G[i],f)==null)continue;
