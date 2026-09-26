@@ -81,6 +81,13 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .add:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
 .add:disabled{background:#e8dccb;box-shadow:none;cursor:default}
 .wa{background:var(--wa)}
+.comprar{background:var(--azul);box-shadow:3px 3px 0 var(--tinta);color:#fff}
+.comprar:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+.pp-box{display:none;margin-top:8px}
+.pp-box.abierta{display:block}
+.pp-ok{margin:8px 0 0;text-align:center;font-weight:800;color:var(--verde)}
+#pp-cart-box{display:contents}
+#pp-cart-box:empty{display:none}
 .enc{margin:-4px 0 0;text-align:center;font-size:.9rem;color:#7b5b46}
 .custom{--c:var(--verde);background:var(--amarillo);justify-content:center;text-align:center;padding:26px 20px;gap:14px}
 .custom .ico{font-size:3.2rem}
@@ -198,11 +205,13 @@ header .wrap{height:60px}
   <header><h2>Tu carrito</h2><button id="cerrar" aria-label="Cerrar carrito">✕</button></header>
   <div id="lineas"></div>
   <div id="pie"><div class="tot"><span>Total</span><span id="total"></span></div>
+  <div id="pp-cart-box"></div>
   <a id="pedir" class="btn wa" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a></div>
 </aside>
 <div id="aviso" role="status"></div>
 
 <script src="guias.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=BAAscGDV97LVWgWVJ-78Mk_9alENONvfxUvJ1VkVrhkmovng1HtMySNf-qDpCTmuLlRFsDRAhrgerYDLiQ&currency=USD&intent=capture&components=buttons"></script>
 <script>
 const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000};
 const COL=['#2F8FD8','#F58A33','#4DB35A','#F2648A','#9B7BD8'];
@@ -266,7 +275,9 @@ function tarjeta(g,i,cat){
    <div class="fmt${dos?'':' uno'}" ${dos?'role="radiogroup" aria-label="Formato"':''}>${op('d')}${op('p')}</div>
    <button class="btn add" data-a="add" ${bloqueada?'disabled':''}>${bloqueada?'✓ Ya está en tu carrito':'Añadir al carrito'}</button>
    ${en&&f=='p'?`<p class="enc">${en} en tu carrito</p>`:''}
-   <a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato ${NOM[f].toLowerCase()}.`)}">Cotizar por WhatsApp</a>
+   ${f=='d'
+     ?`<button class="btn comprar" type="button" data-a="comprar">Comprar ahora</button><div class="pp-box" id="pp-${i}"></div>`
+     :`<a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato ${NOM[f].toLowerCase()}.`)}">Cotizar por WhatsApp</a>`}
    </div></article>`}
 function personalizada(q){
   return `<article class="card custom"><div class="ico">✏️</div><h3>¿Necesitas una guía personalizada?</h3>
@@ -298,6 +309,18 @@ $('#rejilla').addEventListener('click',e=>{
     ir(c,a=='ir'?+b.dataset.n:(pos(c)+(a=='next'?1:-1)+n)%n);c._p=Date.now()+5000;return}
   if(a=='mas'){const d=b.previousElementSibling.classList.toggle('abierta');b.textContent=d?'Ver menos':'Ver más';b.setAttribute('aria-expanded',d);return}
   if(a=='fmt'){fmt[i]=b.dataset.f;pintar();return}
+  if(a=='comprar'){
+    const box=document.getElementById('pp-'+i);
+    const abierta=box.classList.toggle('abierta');
+    if(abierta&&!box.dataset.pp){
+      box.dataset.pp='1';
+      renderPPButton(box,precio(g,'d'),g.titulo,()=>{
+        box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido! Te enviaremos la guía a tu correo.</p>';
+        aviso(`«${g.titulo}» comprada. ¡Gracias!`);
+      });
+    }
+    return;
+  }
   const k=i+'|'+fmt[i];
   if(fmt[i]=='d'&&cart[k])return;
   cart[k]=fmt[i]=='d'?1:(cart[k]||0)+1;
@@ -305,12 +328,41 @@ $('#rejilla').addEventListener('click',e=>{
   $('#cuenta').classList.remove('salto');void $('#cuenta').offsetWidth;$('#cuenta').classList.add('salto');
 });
 
+/* PayPal: crea un botón de pago para un monto y una descripción dadas */
+function renderPPButton(container,amount,descripcion,alPagar){
+  if(typeof paypal=='undefined'){container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p>';return}
+  container.innerHTML='';
+  paypal.Buttons({
+    style:{layout:'vertical',color:'gold',shape:'pill',label:'pay'},
+    createOrder:(d,actions)=>actions.order.create({
+      intent:'CAPTURE',
+      purchase_units:[{description:String(descripcion).slice(0,127),amount:{currency_code:'USD',value:Number(amount).toFixed(2)}}],
+      application_context:{shipping_preference:'NO_SHIPPING'}
+    }),
+    onApprove:(d,actions)=>actions.order.capture().then(alPagar),
+    onError:err=>{console.error(err);alert('Ocurrió un problema procesando el pago. Intenta de nuevo.')}
+  }).render(container);
+}
+/* PayPal: botón para cobrar el total de productos digitales del carrito */
+let ppCartTot=null;
+function renderCartPP(totD){
+  const box=$('#pp-cart-box');
+  if(totD===ppCartTot)return;
+  ppCartTot=totD;
+  if(!totD){box.innerHTML='';return}
+  renderPPButton(box,totD,'Guías digitales - '+CFG.negocio,()=>{
+    Object.keys(cart).forEach(k=>{if(k.endsWith('|d'))delete cart[k]});
+    ppCartTot=null;
+    aviso('¡Pago recibido! Te enviaremos tus guías digitales por correo.');
+    cambio();
+  });
+}
+
 /* panel del carrito */
 function cambio(){guardar();pintar();cajon()}
 function cajon(){
-  const ks=Object.keys(cart);let totD=0,totP=0,n=0,msg=[];
-  $('#lineas').innerHTML=ks.length?ks.map(k=>{const[i,f]=k.split('|'),g=G[i],q=cart[k],p=precio(g,f);if(f=='d')totD+=p*q;else totP+=p*q;n+=q;
-    msg.push(`• ${g.titulo} (${NOM[f]}) x${q} — ${money(p*q,f)}`);
+  const ks=Object.keys(cart);let totD=0,totP=0,n=0,msgP=[];
+  $('#lineas').innerHTML=ks.length?ks.map(k=>{const[i,f]=k.split('|'),g=G[i],q=cart[k],p=precio(g,f);if(f=='d')totD+=p*q;else{totP+=p*q;msgP.push(`• ${g.titulo} (${NOM[f]}) x${q} — ${money(p*q,f)}`)}n+=q;
     return `<div class="lin" data-k="${k}"><img src="${g.img}" alt=""><div><h4>${esc(g.titulo)}</h4><small>${NOM[f]}</small>
     <div class="ctl">${f=='p'?`<button data-c="-" aria-label="Quitar una">−</button><span class="q">${q}</span><button data-c="+" aria-label="Añadir una">+</button>`:'<button class="quitar" data-c="x">Quitar</button>'}
     <span class="pr">${money(p*q,f)}</span></div></div></div>`}).join('')
@@ -318,8 +370,11 @@ function cajon(){
   $('#cuenta').textContent=n;
   const totTxt=[totD?money(totD,'d'):'',totP?money(totP,'p'):''].filter(Boolean).join(' + ')||money(0,'p');
   $('#total').textContent=totTxt;
-  const p=$('#pedir');p.setAttribute('aria-disabled',!ks.length);
-  p.href=ks.length?wa(`¡Hola! Quiero hacer este pedido en ${CFG.negocio}:\n${msg.join('\n')}\nTotal: ${totTxt}`):'#';
+  const p=$('#pedir');
+  p.style.display=totP?'':'none';
+  p.setAttribute('aria-disabled',!totP);
+  p.href=totP?wa(`¡Hola! Quiero hacer este pedido en ${CFG.negocio}:\n${msgP.join('\n')}\nTotal: ${money(totP,'p')}`):'#';
+  renderCartPP(totD);
 }
 $('#lineas').addEventListener('click',e=>{
   const b=e.target.closest('[data-c]');if(!b)return;const k=b.closest('.lin').dataset.k,c=b.dataset.c;
