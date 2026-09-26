@@ -143,6 +143,15 @@ header .wrap{height:60px}
 .mas{padding:8px 0;margin:-8px 0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M91PKLBW8Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M91PKLBW8Z');
+</script>
 </head>
 <body>
 <header><div class="wrap">
@@ -341,15 +350,6 @@ $('#cats').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');i
   document.querySelectorAll('#cats button').forEach(x=>x.setAttribute('aria-pressed',(x.dataset.cat||null)===catSel));
   pintar();if(catSel)$('#catalogo').scrollIntoView()});
 pintar();cajon();
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-M91PKLBW8Z"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-M91PKLBW8Z');
 </script>
 </body>
 </html>
