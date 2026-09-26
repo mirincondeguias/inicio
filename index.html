@@ -90,7 +90,7 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .grupo-tit .n{background:var(--gc,var(--azul));color:#fff;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:800}
 .grupo-tit::after{content:'';flex:1;height:3px;background:var(--gc,var(--azul));border-radius:3px;opacity:.35}
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:30px;padding-bottom:50px}
-.rejilla:has(>.card:only-child){grid-template-columns:1fr}
+.rejilla:has(>.card:only-child){grid-template-columns:minmax(min(250px,100%),320px)}
 .card{--c:var(--azul);display:flex;flex-direction:column;background:#fff;border:var(--borde);border-radius:26px;box-shadow:7px 7px 0 var(--c);overflow:hidden}
 .card .img{background:var(--c);padding:10px 10px 0;border-bottom:var(--borde)}
 .car{position:relative;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
