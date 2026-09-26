@@ -29,9 +29,10 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .acciones{flex:none;display:flex;align-items:center;gap:10px}
 #btnMios{flex:none;min-height:44px;display:flex;align-items:center;gap:8px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 16px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
 #btnMios:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
-#veloM{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:32;display:none}
-#modal{position:fixed;top:50%;left:50%;translate:-50% -50%;width:min(420px,92vw);max-height:88vh;overflow-y:auto;background:var(--crema);border:var(--borde);border-radius:22px;z-index:33;display:none;box-shadow:7px 7px 0 var(--tinta)}
-body.modalAbierto #veloM,body.modalAbierto #modal{display:block}
+#veloM{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:32;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#modal{position:fixed;top:50%;left:50%;translate:-50% -46%;width:min(420px,92vw);max-height:88vh;overflow-y:auto;background:var(--crema);border:var(--borde);border-radius:22px;z-index:33;opacity:0;visibility:hidden;box-shadow:7px 7px 0 var(--tinta);transition:translate .25s,opacity .25s,visibility .25s}
+body.modalAbierto #veloM{opacity:1;visibility:visible}
+body.modalAbierto #modal{translate:-50% -50%;opacity:1;visibility:visible}
 body.modalAbierto{overflow:hidden}
 html:has(body.modalAbierto){overflow:hidden}
 #modal header{position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
@@ -90,7 +91,6 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .grupo-tit::after{content:'';flex:1;height:3px;background:var(--gc,var(--azul));border-radius:3px;opacity:.35}
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:30px;padding-bottom:50px}
 .rejilla:has(>.card:only-child){grid-template-columns:1fr}
-.rejilla .card:has(.pp-box.abierta){grid-column:1/-1}
 .card{--c:var(--azul);display:flex;flex-direction:column;background:#fff;border:var(--borde);border-radius:26px;box-shadow:7px 7px 0 var(--c);overflow:hidden}
 .card .img{background:var(--c);padding:10px 10px 0;border-bottom:var(--borde)}
 .car{position:relative;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
@@ -194,6 +194,7 @@ footer p{margin:6px 0}
 .tit{margin:18px 0 16px}.tit h2{font-size:1.6rem}
 .grupo{margin-bottom:30px}.grupo-tit h3{font-size:1.3rem}
 .rejilla{grid-template-columns:repeat(2,1fr);gap:16px;padding-bottom:36px}
+.fl{display:none}
 footer{padding:28px 0}}
 @media(max-width:480px){
 body{font-size:1rem}
@@ -408,7 +409,7 @@ function tarjeta(g,i,cat){
    <button class="btn add" data-a="add" ${bloqueada?'disabled':''}>${bloqueada?'✓ Ya está en tu carrito':'Añadir al carrito'}</button>
    ${en&&f=='p'?`<p class="enc">${en} en tu carrito</p>`:''}
    ${f=='d'
-     ?`<button class="btn comprar" type="button" data-a="comprar">Comprar ahora</button><div class="pp-box" id="pp-${i}"></div>`
+     ?`<button class="btn comprar" type="button" data-a="comprar">Comprar ahora</button>`
      :`<a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato ${NOM[f].toLowerCase()}.`)}">Cotizar por WhatsApp</a>`}
    </div></article>`}
 function personalizada(q){
@@ -443,20 +444,7 @@ $('#rejilla').addEventListener('click',e=>{
     ir(c,a=='ir'?+b.dataset.n:(pos(c)+(a=='next'?1:-1)+n)%n);c._p=Date.now()+5000;return}
   if(a=='mas'){const d=b.previousElementSibling.classList.toggle('abierta');b.textContent=d?'Ver menos':'Ver más';b.setAttribute('aria-expanded',d);return}
   if(a=='fmt'){fmt[i]=b.dataset.f;pintar();return}
-  if(a=='comprar'){
-    const box=document.getElementById('pp-'+i);
-    const abierta=box.classList.toggle('abierta');
-    if(abierta&&!box.dataset.pp){
-      box.dataset.pp='1';
-      renderPPButton(box,precio(g,'d'),g.titulo,details=>{
-        const email=details.payer&&details.payer.email_address||'';
-        guardarCompra(email,[g]).then(()=>pantallaCompra(g));
-        box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
-        aviso(`«${g.titulo}» comprada. ¡Gracias!`);
-      });
-    }
-    return;
-  }
+  if(a=='comprar'){abrirComprarModal(g);return}
   const k=i+'|'+fmt[i];
   if(fmt[i]=='d'&&cart[k])return;
   cart[k]=fmt[i]=='d'?1:(cart[k]||0)+1;
@@ -508,6 +496,23 @@ function abrirModal(titulo,html){
 }
 function cerrarModal(){document.body.classList.remove('modalAbierto')}
 $('#modalCerrar').onclick=$('#veloM').onclick=cerrarModal;
+
+/* al pulsar "Comprar ahora" en el catálogo: ventana flotante con solo ese producto y su botón de pago */
+function abrirComprarModal(g){
+  const im=g.imgs&&g.imgs.length?g.imgs:[g.img];
+  abrirModal('Comprar guía',`
+    <img src="${im[0]}" alt="${esc(g.titulo)}">
+    <h3>${esc(g.titulo)}</h3>
+    <p style="text-align:center;margin:-8px 0 14px;font:600 1.25rem Fredoka,sans-serif">${money(g.digital,'d')}</p>
+    <div class="pp-box abierta" id="pp-modal"></div>
+  `);
+  renderPPButton($('#pp-modal'),g.digital,g.titulo,details=>{
+    const email=details.payer&&details.payer.email_address||'';
+    guardarCompra(email,[g]).then(()=>pantallaCompra(g));
+    $('#pp-modal').innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
+    aviso(`«${g.titulo}» comprada. ¡Gracias!`);
+  });
+}
 
 /* guarda en Supabase qué guías digitales compró un correo */
 async function guardarCompra(email,guias){
