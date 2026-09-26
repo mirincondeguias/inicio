@@ -374,7 +374,7 @@ function puntos(g,qs){let t=0,ok=0;for(const q of qs){
 
 /* pintar catálogo */
 function carrusel(g){const im=g.imgs&&g.imgs.length?g.imgs:[g.img],n=im.length;
-  return `<div class="car">${g.paginas?`<span class="pagbadge">${g.paginas} pág.</span>`:''}<div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
+  return `<div class="car">${n?`<span class="pagbadge">${n} pág.</span>`:''}<div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
 function tarjeta(g,i,cat){
   const f=fmt[i]||(fmt[i]=g.digital!=null?'d':'p');
   const en=cart[i+'|'+f]||0, bloqueada=f=='d'&&en;
@@ -535,7 +535,7 @@ function portadaDe(c,g){
   return c.img||'';
 }
 function tarjetaMia(c,idx){
-  const pag=(c._g&&c._g.paginas)||c.paginas;
+  const pag=c._g&&c._g.imgs&&c._g.imgs.length?c._g.imgs.length:(c._g&&c._g.img?1:0);
   return `<article class="card mio-card" style="--c:${COL[idx%COL.length]}" data-i="m${idx}">
    <div class="img"><div class="mio-portada" data-a="verPaginas">${pag?`<span class="pagbadge">${pag} pág.</span>`:''}<img src="${c._portada}" alt="Portada de ${esc(c.titulo)}" loading="lazy"></div></div>
    <div class="body"><h3>${esc(c.titulo)}</h3>
