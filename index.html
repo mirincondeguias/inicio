@@ -452,11 +452,36 @@ $('#rejilla').addEventListener('click',e=>{
   $('#cuenta').classList.remove('salto');void $('#cuenta').offsetWidth;$('#cuenta').classList.add('salto');
 });
 
+/* PayPal: intenta cargar el SDK; si el <script> de la cabecera falló (bloqueador de anuncios,
+   red inestable, etc.) lo vuelve a inyectar dinámicamente antes de rendirse. */
+const PP_SDK_SRC='https://www.paypal.com/sdk/js?client-id=BAAscGDV97LVWgWVJ-78Mk_9alENONvfxUvJ1VkVrhkmovng1HtMySNf-qDpCTmuLlRFsDRAhrgerYDLiQ&currency=USD&intent=capture&components=buttons&locale=es_XC';
+let ppSdkPromise=null;
+function cargarPayPalSDK(forzar){
+  if(typeof paypal!='undefined')return Promise.resolve();
+  if(ppSdkPromise&&!forzar)return ppSdkPromise;
+  ppSdkPromise=new Promise((resolve,reject)=>{
+    if(typeof paypal!='undefined')return resolve();
+    const s=document.createElement('script');
+    s.src=PP_SDK_SRC;
+    s.onload=()=>typeof paypal!='undefined'?resolve():reject(new Error('El script cargó pero PayPal no quedó disponible'));
+    s.onerror=()=>reject(new Error('No se pudo descargar el script de PayPal'));
+    document.head.appendChild(s);
+  });
+  return ppSdkPromise;
+}
 /* PayPal: crea un botón de pago para un monto y una descripción dadas */
 function renderPPButton(container,amount,descripcion,alPagar){
-  if(typeof paypal=='undefined'){container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p>';return}
   const val=parseFloat(String(amount).replace(/[^0-9.,-]/g,'').replace(',','.'));
   if(!(val>0)){container.innerHTML='<p class="pp-ok" style="color:#c0392b">Precio inválido para este producto. Revisa el número en guias.js (debe ser algo como 0.99, con punto y sin símbolos).</p>';return}
+  container.innerHTML='<p class="pp-ok">Cargando PayPal…</p>';
+  cargarPayPalSDK().then(()=>dibujarBotonPP(container,val,descripcion,alPagar)).catch(err=>{
+    console.error(err);
+    container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p><button type="button" class="btn" data-a="reintentarPP">Reintentar</button>';
+    const b=container.querySelector('[data-a="reintentarPP"]');
+    if(b)b.onclick=()=>{ppSdkPromise=null;renderPPButton(container,amount,descripcion,alPagar)};
+  });
+}
+function dibujarBotonPP(container,val,descripcion,alPagar){
   container.innerHTML='';
   paypal.Buttons({
     style:{layout:'vertical',color:'gold',shape:'pill',label:'pay'},
