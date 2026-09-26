@@ -101,6 +101,29 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .add:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
 .add:disabled{background:#e8dccb;box-shadow:none;cursor:default}
 .wa{background:var(--wa)}
+/* mis productos: misma rejilla/tarjeta del catálogo, sin ventana flotante */
+.mio-card .car{cursor:pointer}
+.mio-card .fmt{display:none}
+#volverCat{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
+#volverCat:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
+#miosEmailBox .custom{--c:var(--azul)}
+#miosEmailBox input{width:100%;padding:12px;border:var(--borde);border-radius:12px;margin-bottom:10px;font:inherit;box-sizing:border-box}
+/* previsualización de todas las páginas del PDF (superpuesta, como una lupa sobre la tarjeta) */
+#veloPrevia{position:fixed;inset:0;background:rgba(74,46,31,.72);z-index:42;display:none}
+#previaPDF{position:fixed;top:50%;left:50%;translate:-50% -50%;width:min(680px,94vw);max-height:92vh;background:var(--crema);border:var(--borde);border-radius:22px;z-index:43;display:none;flex-direction:column;box-shadow:7px 7px 0 var(--tinta)}
+body.previaAbierta #veloPrevia,body.previaAbierta #previaPDF{display:flex}
+body.previaAbierta{overflow:hidden}
+html:has(body.previaAbierta){overflow:hidden}
+#previaPDF header{flex:none;position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-radius:19px 19px 0 0}
+#previaPDF h2{font-size:1.3rem}
+#previaCerrar{flex:none;width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.1rem;font-weight:800}
+#previaBody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;display:flex;flex-direction:column;gap:16px}
+.pagina{display:flex;flex-direction:column;align-items:center;gap:6px}
+.pagina img{width:100%;max-width:460px;border:var(--borde);border-radius:12px;display:block}
+.pagina .num{font-size:.85rem;font-weight:800;color:#7b5b46}
+#previaPie{flex:none;padding:14px 18px max(14px,env(safe-area-inset-bottom));border-top:var(--borde)}
+#previaPie:empty{display:none;border:0;padding:0}
+#previaPie .btn{box-sizing:border-box}
 .comprar{background:var(--azul);box-shadow:3px 3px 0 var(--tinta);color:#fff}
 .comprar:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
 .pp-box{display:none;margin-top:8px}
@@ -198,7 +221,7 @@ header .wrap{height:60px}
 </div></header>
 
 <main>
-<section class="hero"><div class="wrap">
+<section class="hero" id="hero"><div class="wrap">
   <div>
     <h1 id="titulo" aria-label="Guías para aprender jugando">Guías para aprender jugando</h1>
     <p class="sub">Guías infantiles y educativas en formato digital o impreso. ¿No ves la que buscas? Hacemos la que necesitas.</p>
@@ -215,6 +238,12 @@ header .wrap{height:60px}
 <section class="wrap" id="catalogo">
   <div class="tit"><h2>Nuestras guías</h2><p id="estado" aria-live="polite"></p></div>
   <div id="rejilla"></div>
+</section>
+
+<section class="wrap" id="misProductos" hidden>
+  <div class="tit"><h2>Mis productos</h2><button id="volverCat" type="button">← Volver al catálogo</button></div>
+  <div id="miosEmailBox"></div>
+  <div id="miosRejilla"></div>
 </section>
 </main>
 
@@ -239,6 +268,13 @@ header .wrap{height:60px}
 <aside id="modal" aria-label="Ventana" role="dialog" aria-modal="true">
   <header><h2 id="modalTit"></h2><button id="modalCerrar" aria-label="Cerrar">✕</button></header>
   <div id="modalBody"></div>
+</aside>
+
+<div id="veloPrevia"></div>
+<aside id="previaPDF" aria-label="Previsualización de páginas" role="dialog" aria-modal="true">
+  <header><h2 id="previaTit"></h2><button id="previaCerrar" aria-label="Cerrar">✕</button></header>
+  <div id="previaBody"></div>
+  <div id="previaPie"></div>
 </aside>
 
 <script src="guias.js"></script>
@@ -419,7 +455,7 @@ function renderCartPP(totD){
     const email=details.payer&&details.payer.email_address||'';
     Object.keys(cart).forEach(k=>{if(k.endsWith('|d'))delete cart[k]});
     ppCartTot=null;
-    guardarCompra(email,items).then(()=>{items.length==1?pantallaCompra(items[0]):pantallaMisProductos(email)});
+    guardarCompra(email,items).then(()=>{items.length==1?pantallaCompra(items[0]):(mostrarVista('mios'),cargarMisProductos(email))});
     aviso('¡Pago recibido! Gracias por tu compra.');
     cambio();
   });
@@ -456,34 +492,90 @@ async function pantallaCompra(g){
          :`<p style="text-align:center">Ya registramos tu compra. En breve activaremos tu descarga y te avisaremos por correo.</p>`}
     <button class="btn wa" type="button" id="verMiosBtn">Ver todos mis productos</button>
   `;
-  $('#verMiosBtn').onclick=()=>pantallaMisProductos();
+  $('#verMiosBtn').onclick=()=>{cerrarModal();mostrarVista('mios');cargarMisProductos()};
 }
 
-/* pantalla "mis productos": pide correo (si no lo conocemos) y lista sus compras digitales */
-async function pantallaMisProductos(email){
+/* === "Mis productos": no es una ventana flotante, es una pantalla del sitio          === */
+/* === igual de "tarjetas" que el catálogo, solo que el carrusel muestra las páginas    === */
+/* === del PDF, y al pulsar la tarjeta se ve la previsualización con todas las hojas.   === */
+let MIOS=[];
+function mostrarVista(v){
+  $('#hero').hidden=v!=='catalogo';
+  $('#catalogo').hidden=v!=='catalogo';
+  $('#misProductos').hidden=v!=='mios';
+  scrollTo({top:0,behavior:'instant'in window?'instant':'auto'});
+}
+function buscarProductoPorTitulo(t){
+  const n=String(t||'').trim().toLowerCase();
+  return G.find(g=>String(g.titulo||'').trim().toLowerCase()===n);
+}
+/* páginas del PDF a mostrar en el carrusel de una compra: usa g.paginas si existe,
+   si no, cae en g.imgs (las imágenes del catálogo) o en la portada guardada */
+function paginasDe(c,g){
+  if(g&&g.paginas&&g.paginas.length)return g.paginas;
+  if(g&&g.imgs&&g.imgs.length)return g.imgs;
+  return[c.img||(g&&g.img)||''];
+}
+function tarjetaMia(c,idx,paginas){
+  return `<article class="card mio-card" style="--c:${COL[idx%COL.length]}" data-i="m${idx}">
+   <div class="img">${carrusel({titulo:c.titulo,imgs:paginas})}</div>
+   <div class="body"><h3>${esc(c.titulo)}</h3>
+   <button class="btn comprar" type="button" data-a="verPaginas">Ver todas las páginas</button>
+   ${c._url?`<a class="btn add" href="${c._url}" target="_blank" rel="noopener" download>Descargar</a>`:'<span class="enc" style="text-align:center">Ya registramos tu compra. Pronto activaremos tu descarga.</span>'}
+   </div></article>`;
+}
+function cajaEmail(){
+  return `<div class="grupo"><div class="rejilla"><article class="card custom">
+    <div class="ico">📦</div><h3>Ver mis productos</h3>
+    <p>Escribe el correo con el que compraste para ver tus guías.</p>
+    <input id="misEmail" type="email" placeholder="tu@correo.com" autocomplete="email">
+    <button class="btn add" type="button" id="misBuscar">Buscar mis productos</button>
+  </article></div></div>`;
+}
+async function cargarMisProductos(email){
   email=email||localStorage.getItem('mrg-email')||'';
+  const rej=$('#miosRejilla');
   if(!email){
-    abrirModal('Mis productos',`
-      <p>Escribe el correo con el que compraste para ver tus guías.</p>
-      <input id="misEmail" type="email" placeholder="tu@correo.com" autocomplete="email">
-      <button class="btn add" type="button" id="misBuscar">Buscar mis productos</button>
-    `);
-    $('#misBuscar').onclick=()=>{const e=$('#misEmail').value.trim();if(e)pantallaMisProductos(e)};
+    $('#miosEmailBox').innerHTML=cajaEmail();rej.innerHTML='';
+    $('#misBuscar').onclick=()=>{const e=$('#misEmail').value.trim();if(e)cargarMisProductos(e)};
     return;
   }
-  abrirModal('Mis productos','<p>Cargando…</p>');
-  if(!supa){$('#modalBody').innerHTML='<p>La tienda aún no tiene conectada la base de datos.</p>';return}
+  $('#miosEmailBox').innerHTML='';rej.innerHTML='<p>Cargando…</p>';
+  if(!supa){rej.innerHTML='<p>La tienda aún no tiene conectada la base de datos.</p>';return}
   const{data,error}=await supa.from('compras').select('*').eq('email',email).order('creado_en',{ascending:false});
-  if(error){$('#modalBody').innerHTML='<p>Ocurrió un error buscando tus productos. Intenta de nuevo.</p>';return}
-  if(!data||!data.length){$('#modalBody').innerHTML='<p>No encontramos compras con ese correo.</p>';return}
+  if(error){rej.innerHTML='<p>Ocurrió un error buscando tus productos. Intenta de nuevo.</p>';return}
+  if(!data||!data.length){
+    $('#miosEmailBox').innerHTML=cajaEmail();rej.innerHTML='<p>No encontramos compras con ese correo.</p>';
+    $('#misBuscar').onclick=()=>{const e=$('#misEmail').value.trim();if(e)cargarMisProductos(e)};
+    return;
+  }
   localStorage.setItem('mrg-email',email);
-  const filas=await Promise.all(data.map(async c=>{
+  MIOS=await Promise.all(data.map(async c=>{
+    const g=buscarProductoPorTitulo(c.titulo);
     const url=enlaceDescarga(await buscarEnlace(c.titulo));
-    return `<div class="mio"><img src="${c.img||''}" alt=""><b>${esc(c.titulo)}</b>${url?`<a class="btn add" href="${url}" target="_blank" rel="noopener" download>Descargar</a>`:'<span style="font-size:.85rem">Pronto</span>'}</div>`;
+    return{...c,_g:g,_url:url,_paginas:paginasDe(c,g)};
   }));
-  $('#modalBody').innerHTML=filas.join('');
+  rej.innerHTML=`<div class="grupo"><div class="rejilla">${MIOS.map((c,idx)=>tarjetaMia(c,idx,c._paginas)).join('')}</div></div>`;
 }
-$('#btnMios').onclick=()=>pantallaMisProductos();
+function abrirPreviaPDF(item){
+  const paginas=item._paginas&&item._paginas.length?item._paginas:[item.img||''];
+  $('#previaTit').textContent=item.titulo;
+  $('#previaBody').innerHTML=paginas.map((s,k)=>`<div class="pagina"><img src="${s}" alt="Página ${k+1} de ${esc(item.titulo)}" loading="lazy"><span class="num">Página ${k+1} de ${paginas.length}</span></div>`).join('');
+  $('#previaPie').innerHTML=item._url?`<a class="btn add" href="${item._url}" target="_blank" rel="noopener" download>Descargar producto</a>`:'';
+  document.body.classList.add('previaAbierta');
+}
+function cerrarPreviaPDF(){document.body.classList.remove('previaAbierta')}
+$('#previaCerrar').onclick=$('#veloPrevia').onclick=cerrarPreviaPDF;
+$('#miosRejilla').addEventListener('click',e=>{
+  const card=e.target.closest('.card');if(!card)return;
+  const idx=+card.dataset.i.slice(1),item=MIOS[idx];
+  const fl=e.target.closest('.fl');
+  if(fl){const c=card.querySelector('.pistas'),n=c.children.length;
+    ir(c,(pos(c)+(fl.dataset.a=='next'?1:-1)+n)%n);c._p=Date.now()+5000;return}
+  if(e.target.closest('[data-a="verPaginas"]')||e.target.closest('.car')){abrirPreviaPDF(item);return}
+});
+$('#btnMios').onclick=()=>{mostrarVista('mios');cargarMisProductos()};
+$('#volverCat').onclick=()=>mostrarVista('catalogo');
 
 /* panel del carrito */
 function cambio(){guardar();pintar();cajon()}
@@ -508,19 +600,23 @@ $('#lineas').addEventListener('click',e=>{
   if(c=='+')cart[k]++;else if(c=='-'){if(--cart[k]<1)delete cart[k]}else delete cart[k];cambio()});
 const abrir=v=>{document.body.classList.toggle('abierto',v);if(v){document.querySelectorAll('.pp-box.abierta').forEach(b=>b.classList.remove('abierta'));$('#cerrar').focus()}else $('#btnCarrito').focus()};
 $('#btnCarrito').onclick=()=>abrir(true);$('#cerrar').onclick=$('#velo').onclick=()=>abrir(false);
-addEventListener('keydown',e=>{if(e.key=='Escape'){abrir(false);cerrarModal()}});
+addEventListener('keydown',e=>{if(e.key=='Escape'){abrir(false);cerrarModal();cerrarPreviaPDF()}});
 let tm;function aviso(t){const a=$('#aviso');a.textContent=t;a.classList.add('ver');clearTimeout(tm);tm=setTimeout(()=>a.classList.remove('ver'),1800)}
 
 /* carrusel: rota solo, se pausa al tocarlo o pasar el mouse, y se puede deslizar */
 const posG={},pos=c=>Math.round(c.scrollLeft/c.clientWidth);
 const ir=(c,x,suave=true)=>c.scrollTo({left:x*c.clientWidth,behavior:suave?'smooth':'auto'});
-let sobre=null;const R=$('#rejilla');
-R.addEventListener('scroll',e=>{const c=e.target;if(!c.classList||!c.classList.contains('pistas'))return;
-  const x=pos(c);posG[c.closest('.card').dataset.i]=x},true);
-['pointerdown','touchstart','wheel','focusin'].forEach(ev=>R.addEventListener(ev,e=>{
-  const c=e.target.closest&&e.target.closest('.car');if(c)c.querySelector('.pistas')._p=Date.now()+5000},{passive:true}));
-R.addEventListener('pointerover',e=>{if(e.pointerType=='mouse')sobre=e.target.closest('.car')});
-R.addEventListener('mouseleave',()=>sobre=null);
+let sobre=null;
+function engancharCarrusel(cont){
+  cont.addEventListener('scroll',e=>{const c=e.target;if(!c.classList||!c.classList.contains('pistas'))return;
+    const x=pos(c);posG[c.closest('.card').dataset.i]=x},true);
+  ['pointerdown','touchstart','wheel','focusin'].forEach(ev=>cont.addEventListener(ev,e=>{
+    const c=e.target.closest&&e.target.closest('.car');if(c)c.querySelector('.pistas')._p=Date.now()+5000},{passive:true}));
+  cont.addEventListener('pointerover',e=>{if(e.pointerType=='mouse')sobre=e.target.closest('.car')});
+  cont.addEventListener('mouseleave',()=>sobre=null);
+}
+engancharCarrusel($('#rejilla'));
+engancharCarrusel($('#miosRejilla'));
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(()=>{
   if(document.hidden||document.body.classList.contains('abierto'))return;
   document.querySelectorAll('.pistas').forEach(c=>{
