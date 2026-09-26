@@ -165,11 +165,6 @@ body.abierto #cajon{translate:0 0;visibility:visible}
 #cajon header{position:static;padding:max(14px,env(safe-area-inset-top)) 18px 14px;display:flex;justify-content:space-between;align-items:center;height:auto}
 #cajon h2{font-size:1.5rem}
 #cerrar{width:44px;height:44px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.2rem;font-weight:800}
-#cuentaCarrito:empty{display:none}
-.cta-cuenta{margin:14px 18px 0;background:#fff;border:var(--borde);border-radius:16px;padding:12px}
-.cta-cuenta p{margin:0 0 8px;font-size:.95rem}
-.cta-cuenta input{width:100%;padding:11px;border:var(--borde);border-radius:12px;margin-bottom:8px;font:inherit;box-sizing:border-box}
-.cta-cuenta .btn{width:100%;box-sizing:border-box;padding:10px}
 #lineas{padding:14px 18px;display:flex;flex-direction:column;gap:12px}
 .lin{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;background:#fff;border:var(--borde);border-radius:16px;padding:10px}
 .lin img{width:56px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--tinta)}
@@ -293,7 +288,6 @@ header .wrap{height:60px}
 <aside id="cajon" aria-label="Carrito de compras">
   <header><h2>Tu carrito</h2><button id="cerrar" aria-label="Cerrar carrito">✕</button></header>
   <div id="cuerpo">
-  <div id="cuentaCarrito"></div>
   <div id="lineas"></div>
   <div id="pie"><div class="tot"><span>Total</span><span id="total"></span></div>
   <div id="pp-cart-box"></div>
@@ -315,6 +309,7 @@ header .wrap{height:60px}
 </aside>
 
 <script src="guias.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=BAAscGDV97LVWgWVJ-78Mk_9alENONvfxUvJ1VkVrhkmovng1HtMySNf-qDpCTmuLlRFsDRAhrgerYDLiQ&currency=USD&intent=capture&components=buttons&locale=es_XC"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000};
@@ -327,11 +322,7 @@ const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000}
       creado_en (timestamptz default now()) y UNIQUE(email, producto_id).
    5) Crea la tabla "enlaces" con: titulo (text, primary key) y link (text) — ahí guardas,
       por cada guía, el link de descarga del PDF. El título debe escribirse igual que en tu
-      catálogo (mayúsculas/minúsculas no importan, mira más abajo cómo se compara).
-   6) Crea la tabla "carritos" con: email (text, primary key), carrito (jsonb) y
-      actualizado_en (timestamptz default now()) — ahí se guarda el carrito de cada
-      cliente que decida vincularlo a su correo, para que no lo pierda si cambia de
-      dispositivo o borra los datos del navegador. */
+      catálogo (mayúsculas/minúsculas no importan, mira más abajo cómo se compara). */
 const SUPA_URL='https://ihenmezfdlnluvfjbzje.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZW5tZXpmZGxubHV2ZmpiemplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0MjY3MDIsImV4cCI6MjEwNjAwMjcwMn0.aGcPbn8KQBTkRNU33y2MHOTizWv3BXrFnNXsFYifm2g';
 const supa=(SUPA_URL.includes('TU-PROYECTO')||typeof window.supabase=='undefined')?null:window.supabase.createClient(SUPA_URL,SUPA_KEY);
@@ -461,81 +452,22 @@ $('#rejilla').addEventListener('click',e=>{
   $('#cuenta').classList.remove('salto');void $('#cuenta').offsetWidth;$('#cuenta').classList.add('salto');
 });
 
-/* ======================================================================
-   PAYPAL — hecho de nuevo, desde cero
-   ======================================================================
-   Tu Client ID de PayPal (app "Live" en developer.paypal.com → Apps & Credentials).
-   Si algún día necesitas cambiarlo, es el único lugar donde hay que tocarlo. */
-const PAYPAL_CLIENT_ID='BAAkAWM0guncXXc4kDpu9yxA4RGpdN43MhNdoRw0pynRCeBTtZlMJ9wvLQIgXhhYOyXBnI4TYkIywfoDTE';
-
-/* Construye la URL del SDK. currency/intent/components/locale van fijos porque
-   así los usa todo este sitio; si un día vendes en otra moneda, cámbialos aquí. */
-function urlSdkPayPal(){
-  const p=new URLSearchParams({
-    'client-id':PAYPAL_CLIENT_ID,
-    currency:'USD',
-    intent:'capture',
-    components:'buttons',
-    locale:'es_XC'
-  });
-  return 'https://www.paypal.com/sdk/js?'+p.toString();
-}
-
-/* Carga el SDK una sola vez (varios botones pueden pedirlo a la vez y comparten
-   la misma promesa). Si ya había un intento fallido, lo limpia del DOM antes de
-   reintentar, para que el navegador no reutilice la petición rota. */
-let promesaSdkPayPal=null;
-function cargarSdkPayPal(){
-  if(window.paypal)return Promise.resolve(window.paypal);
-  if(promesaSdkPayPal)return promesaSdkPayPal;
-  promesaSdkPayPal=new Promise((resolve,reject)=>{
-    document.querySelectorAll('script[data-paypal-sdk]').forEach(s=>s.remove());
-    const s=document.createElement('script');
-    s.src=urlSdkPayPal();
-    s.dataset.paypalSdk='1';
-    s.onload=()=>{
-      if(window.paypal)resolve(window.paypal);
-      else reject(new Error('El SDK de PayPal cargó pero no expuso window.paypal (revisa el Client ID)'));
-    };
-    s.onerror=()=>reject(new Error('El navegador no pudo descargar https://www.paypal.com/sdk/js (red, bloqueador de anuncios o firewall)'));
-    document.head.appendChild(s);
-  }).catch(err=>{promesaSdkPayPal=null;throw err});
-  return promesaSdkPayPal;
-}
-
-/* Dibuja un botón de PayPal dentro de "container" por el monto indicado.
-   alPagar(details) se llama cuando el pago se aprueba y se captura. */
+/* PayPal: crea un botón de pago para un monto y una descripción dadas */
 function renderPPButton(container,amount,descripcion,alPagar){
+  if(typeof paypal=='undefined'){container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p>';return}
   const val=parseFloat(String(amount).replace(/[^0-9.,-]/g,'').replace(',','.'));
-  if(!(val>0)){
-    container.innerHTML='<p class="pp-ok" style="color:#c0392b">Precio inválido para este producto. Revisa el número en guias.js (debe ser algo como 0.99, con punto y sin símbolos).</p>';
-    return;
-  }
-  container.innerHTML='<p class="pp-ok">Cargando PayPal…</p>';
-  cargarSdkPayPal().then(paypal=>{
-    container.innerHTML='';
-    paypal.Buttons({
-      style:{layout:'vertical',color:'gold',shape:'pill',label:'pay'},
-      createOrder:(d,actions)=>actions.order.create({
-        intent:'CAPTURE',
-        purchase_units:[{description:String(descripcion).slice(0,127),amount:{currency_code:'USD',value:val.toFixed(2)}}],
-        application_context:{shipping_preference:'NO_SHIPPING'}
-      }),
-      onApprove:(d,actions)=>actions.order.capture().then(alPagar),
-      onError:err=>{
-        console.error('PayPal onError:',err);
-        container.innerHTML='<p class="pp-ok" style="color:#c0392b">Ocurrió un problema con PayPal. Intenta de nuevo o revisa la consola del navegador.</p>';
-      }
-    }).render(container).catch(err=>{
-      console.error('PayPal render:',err);
-      container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo mostrar el botón de pago. Revisa la consola del navegador (F12) para más detalle.</p>';
-    });
-  }).catch(err=>{
-    console.error('PayPal SDK:',err);
-    container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p><button type="button" class="btn" data-a="reintentarPP">Reintentar</button>';
-    const b=container.querySelector('[data-a="reintentarPP"]');
-    if(b)b.onclick=()=>renderPPButton(container,amount,descripcion,alPagar);
-  });
+  if(!(val>0)){container.innerHTML='<p class="pp-ok" style="color:#c0392b">Precio inválido para este producto. Revisa el número en guias.js (debe ser algo como 0.99, con punto y sin símbolos).</p>';return}
+  container.innerHTML='';
+  paypal.Buttons({
+    style:{layout:'vertical',color:'gold',shape:'pill',label:'pay'},
+    createOrder:(d,actions)=>actions.order.create({
+      intent:'CAPTURE',
+      purchase_units:[{description:String(descripcion).slice(0,127),amount:{currency_code:'USD',value:val.toFixed(2)}}],
+      application_context:{shipping_preference:'NO_SHIPPING'}
+    }),
+    onApprove:(d,actions)=>actions.order.capture().then(alPagar),
+    onError:err=>{console.error(err);container.innerHTML='<p class="pp-ok" style="color:#c0392b">Ocurrió un problema con PayPal. Intenta de nuevo o revisa la consola del navegador.</p>'}
+  }).render(container).catch(err=>{console.error(err);container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo mostrar el botón de pago. Revisa la consola del navegador (F12) para más detalle.</p>'});
 }
 /* PayPal: botón para cobrar el total de productos digitales del carrito */
 let ppCartTot=null;
@@ -716,63 +648,9 @@ $('#btnMios').onclick=()=>{mostrarVista('mios');cargarMisProductos()};
 $('#volverCat').onclick=()=>mostrarVista('catalogo');
 $('#salirCuenta').onclick=()=>{localStorage.removeItem('mrg-email');MIOS=[];cargarMisProductos('')};
 
-/* === Vincular el carrito a un correo (Supabase) ===
-   El cliente escribe su correo en el carrito y, a partir de ahí, cada cambio se
-   guarda también en la tabla "carritos". Si vuelve a escribir el mismo correo
-   (en este navegador o en otro), su carrito se recupera automáticamente. */
-const emailActual=()=>localStorage.getItem('mrg-email')||'';
-let ppCarritoTimer=null;
-function guardarCarritoRemoto(){
-  const email=emailActual();
-  if(!supa||!email)return;
-  clearTimeout(ppCarritoTimer);
-  ppCarritoTimer=setTimeout(async()=>{
-    try{await supa.from('carritos').upsert({email,carrito:cart,actualizado_en:new Date().toISOString()},{onConflict:'email'})}
-    catch(e){console.error('No se pudo guardar el carrito en Supabase:',e)}
-  },700);
-}
-/* trae el carrito guardado para ese correo y lo combina con el que ya esté abierto aquí */
-async function cargarCarritoRemoto(email){
-  if(!supa||!email)return;
-  try{
-    const{data,error}=await supa.from('carritos').select('carrito').eq('email',email).maybeSingle();
-    if(error||!data||!data.carrito)return;
-    for(const k in data.carrito){
-      const[i,f]=k.split('|');
-      if(!G[i]||precio(G[i],f)==null)continue;
-      cart[k]=f=='d'?1:(cart[k]||0)+(+data.carrito[k]||0);
-    }
-    guardar();pintar();cajon();
-  }catch(e){console.error('No se pudo recuperar el carrito de Supabase:',e)}
-}
-function vincularCarrito(email){
-  if(!email)return;
-  const previo=emailActual();
-  localStorage.setItem('mrg-email',email);
-  if(previo!==email)cargarCarritoRemoto(email);else guardarCarritoRemoto();
-  pintarCuentaCarrito();
-  aviso('Carrito vinculado a tu correo');
-}
-function desvincularCarrito(){localStorage.removeItem('mrg-email');pintarCuentaCarrito()}
-function pintarCuentaCarrito(){
-  const box=$('#cuentaCarrito');if(!box)return;
-  if(!supa){box.innerHTML='';return}
-  const email=emailActual();
-  box.innerHTML=email
-    ?`<div class="cta-cuenta"><p>🔒 Carrito guardado con <b>${esc(email)}</b></p><button type="button" class="btn" id="quitarVinculo">Usar otro correo</button></div>`
-    :`<div class="cta-cuenta"><p>Escribe tu correo y no perderás tu carrito aunque cambies de dispositivo:</p>
-       <input id="carritoEmail" type="email" placeholder="tu@correo.com" autocomplete="email">
-       <button type="button" class="btn add" id="vincularBtn">Guardar mi carrito</button></div>`;
-  const inp=$('#carritoEmail'),btn=$('#vincularBtn'),quitar=$('#quitarVinculo');
-  if(btn)btn.onclick=()=>{const e=inp.value.trim();if(e)vincularCarrito(e)};
-  if(inp)inp.addEventListener('keydown',e=>{if(e.key=='Enter'){e.preventDefault();btn.click()}});
-  if(quitar)quitar.onclick=desvincularCarrito;
-}
-
 /* panel del carrito */
-function cambio(){guardar();pintar();cajon();guardarCarritoRemoto()}
+function cambio(){guardar();pintar();cajon()}
 function cajon(){
-  pintarCuentaCarrito();
   const ks=Object.keys(cart);let totD=0,totP=0,n=0,msgP=[];
   $('#lineas').innerHTML=ks.length?ks.map(k=>{const[i,f]=k.split('|'),g=G[i],q=cart[k],p=precio(g,f);if(f=='d')totD+=p*q;else{totP+=p*q;msgP.push(`• ${g.titulo} (${NOM[f]}) x${q} — ${money(p*q,f)}`)}n+=q;
     return `<div class="lin" data-k="${k}"><img src="${g.img}" alt=""><div><h4>${esc(g.titulo)}</h4><small>${NOM[f]}</small>
@@ -842,7 +720,6 @@ $('#catList').addEventListener('click',e=>{const b=e.target.closest('[data-cat]'
 document.addEventListener('click',e=>{if(!e.target.closest('.cat-drop'))cerrarCats()});
 pintarCatBtn();
 pintar();cajon();
-if(emailActual())cargarCarritoRemoto(emailActual());
 </script>
 </body>
 </html>
