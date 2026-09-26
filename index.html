@@ -94,7 +94,7 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .car{position:relative;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
 .pistas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:auto;overscroll-behavior-x:contain}
 .pistas::-webkit-scrollbar{display:none}
-.pistas img{flex:0 0 100%;scroll-snap-align:start;display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.pistas img{flex:0 0 100%;scroll-snap-align:start;display:block;width:100%;aspect-ratio:3/4;object-fit:cover;cursor:pointer}
 .pagbadge{position:absolute;top:8px;left:8px;z-index:2;background:var(--tinta);color:#fff;font-weight:800;font-size:.8rem;line-height:1;padding:5px 10px;border-radius:999px;box-shadow:2px 2px 0 rgba(0,0,0,.18);pointer-events:none}
 .fl{position:absolute;top:50%;translate:0 -50%;width:36px;height:36px;border:2px solid var(--tinta);border-radius:50%;background:rgba(255,247,232,.92);color:var(--tinta);font-weight:800;font-size:1.3rem;line-height:1;padding:0}
 .fl.prev{left:6px}.fl.next{right:6px}
@@ -117,8 +117,11 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .mio-card .fmt{display:none}
 .mio-portada{position:relative;cursor:pointer;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
 .mio-portada img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
-#volverCat{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
-#volverCat:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
+.tit-acciones{display:flex;gap:10px;flex-wrap:wrap}
+#volverCat,#salirCuenta{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
+#volverCat:active,#salirCuenta:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
+#salirCuenta{background:var(--crema)}
+#salirCuenta[hidden]{display:none}
 #miosEmailBox .custom{--c:var(--azul)}
 #miosEmailBox input{width:100%;padding:12px;border:var(--borde);border-radius:12px;margin-bottom:10px;font:inherit;box-sizing:border-box}
 /* previsualización de todas las páginas del PDF (superpuesta, como una lupa sobre la tarjeta) */
@@ -130,9 +133,11 @@ html:has(body.previaAbierta){overflow:hidden}
 #previaPDF header{flex:none;position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-radius:19px 19px 0 0}
 #previaPDF h2{font-size:1.3rem}
 #previaCerrar{flex:none;width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.1rem;font-weight:800}
-#previaBody{flex:1;min-height:0;padding:0}
+#previaBody{flex:1;min-height:0;padding:0;overflow-y:auto}
 #previaBody iframe{width:100%;height:100%;min-height:70vh;border:0;display:block}
 #previaBody p{padding:18px;margin:0}
+.previaImgs{display:flex;flex-direction:column;gap:12px;padding:14px}
+.previaImgs img{width:100%;display:block;border-radius:12px;border:var(--borde)}
 #previaPie{flex:none;padding:14px 18px max(14px,env(safe-area-inset-bottom));border-top:var(--borde)}
 #previaPie:empty{display:none;border:0;padding:0}
 #previaPie .btn{box-sizing:border-box}
@@ -186,16 +191,19 @@ footer p{margin:6px 0}
 .buscar input{font-size:1.05rem;padding:14px 48px 14px 50px;box-shadow:4px 4px 0 var(--azul)}
 .tit{margin:18px 0 16px}.tit h2{font-size:1.6rem}
 .grupo{margin-bottom:30px}.grupo-tit h3{font-size:1.3rem}
-.rejilla{gap:26px;padding-bottom:36px}
+.rejilla{grid-template-columns:repeat(2,1fr);gap:16px;padding-bottom:36px}
 footer{padding:28px 0}}
 @media(max-width:480px){
 body{font-size:1rem}
 header .wrap{height:60px}
 .marca{font-size:1.15rem}.marca img{width:40px;height:40px}
 #btnCarrito{padding:8px 14px}
-.card{border-radius:22px;box-shadow:5px 5px 0 var(--c)}
-.rejilla{gap:24px}
-.body{padding:14px}
+.card{border-radius:18px;box-shadow:4px 4px 0 var(--c)}
+.rejilla{gap:12px}
+.body{padding:10px;gap:6px}
+.body h3{font-size:1.05rem}
+.desc{font-size:.85rem;-webkit-line-clamp:2}
+.fmt b{font-size:.95rem}
 #aviso{top:calc(68px + env(safe-area-inset-top))}}
 @media(max-width:380px){.tx{display:none}.marca{font-size:1.05rem}}
 @media(pointer:coarse){
@@ -253,7 +261,12 @@ header .wrap{height:60px}
 </section>
 
 <section class="wrap" id="misProductos" hidden>
-  <div class="tit"><h2>Mis productos</h2><button id="volverCat" type="button">← Volver al catálogo</button></div>
+  <div class="tit"><h2>Mis productos</h2>
+    <div class="tit-acciones">
+      <button id="salirCuenta" type="button" hidden>Salir de mi cuenta</button>
+      <button id="volverCat" type="button">← Volver al catálogo</button>
+    </div>
+  </div>
   <div id="miosEmailBox"></div>
   <div id="miosRejilla"></div>
 </section>
@@ -417,6 +430,8 @@ function pintar(){
   document.querySelectorAll('.pistas').forEach(c=>{const x=posG[c.closest('.card').dataset.i]||0;if(x)ir(c,x,false)});
 }
 $('#rejilla').addEventListener('click',e=>{
+  const imgEl=e.target.closest('.pistas img');
+  if(imgEl){const ic=e.target.closest('.card').dataset.i;abrirPreviaCatalogo(G[ic],ic);return}
   const b=e.target.closest('[data-a]');if(!b)return;
   const i=b.closest('.card').dataset.i,g=G[i],a=b.dataset.a;
   if(a=='ir'||a=='prev'||a=='next'){const c=b.closest('.card').querySelector('.pistas'),n=c.children.length;
@@ -553,6 +568,7 @@ function cajaEmail(){
 }
 async function cargarMisProductos(email){
   email=email||localStorage.getItem('mrg-email')||'';
+  $('#salirCuenta').hidden=!email;
   const rej=$('#miosRejilla');
   if(!email){
     $('#miosEmailBox').innerHTML=cajaEmail();rej.innerHTML='';
@@ -576,6 +592,33 @@ async function cargarMisProductos(email){
   }));
   rej.innerHTML=`<div class="grupo"><div class="rejilla">${MIOS.map((c,idx)=>tarjetaMia(c,idx)).join('')}</div></div>`;
 }
+/* vista previa (tipo PDF) de una guía del catálogo: todas sus páginas/imágenes, con el botón de comprar fijo abajo */
+function abrirPreviaCatalogo(g,i){
+  const im=g.imgs&&g.imgs.length?g.imgs:[g.img];
+  $('#previaTit').textContent=g.titulo;
+  $('#previaBody').innerHTML=`<div class="previaImgs">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>`;
+  const f=fmt[i]||(fmt[i]=g.digital!=null?'d':'p');
+  if(f=='d'){
+    $('#previaPie').innerHTML=`<button class="btn comprar" type="button" id="previaComprar">Comprar ahora — ${money(g.digital,'d')}</button><div class="pp-box" id="pp-previa"></div>`;
+    $('#previaComprar').onclick=()=>{
+      const box=$('#pp-previa');
+      const abierta=box.classList.toggle('abierta');
+      if(abierta&&!box.dataset.pp){
+        box.dataset.pp='1';
+        renderPPButton(box,g.digital,g.titulo,details=>{
+          const email=details.payer&&details.payer.email_address||'';
+          guardarCompra(email,[g]).then(()=>pantallaCompra(g));
+          box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
+          aviso(`«${g.titulo}» comprada. ¡Gracias!`);
+          setTimeout(cerrarPreviaPDF,900);
+        });
+      }
+    };
+  }else{
+    $('#previaPie').innerHTML=`<a class="btn wa" target="_blank" rel="noopener" href="${wa(`¡Hola! Me gustaría cotizar la guía "${g.titulo}" en formato impreso.`)}">Cotizar por WhatsApp — ${money(g.impreso,'p')}</a>`;
+  }
+  document.body.classList.add('previaAbierta');
+}
 function abrirPreviaPDF(item){
   $('#previaTit').textContent=item.titulo;
   $('#previaBody').innerHTML=item._preview
@@ -593,6 +636,7 @@ $('#miosRejilla').addEventListener('click',e=>{
 });
 $('#btnMios').onclick=()=>{mostrarVista('mios');cargarMisProductos()};
 $('#volverCat').onclick=()=>mostrarVista('catalogo');
+$('#salirCuenta').onclick=()=>{localStorage.removeItem('mrg-email');MIOS=[];cargarMisProductos('')};
 
 /* panel del carrito */
 function cambio(){guardar();pintar();cajon()}
