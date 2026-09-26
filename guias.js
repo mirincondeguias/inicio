@@ -27,7 +27,7 @@ window.GUIAS = [
    "Caligrafía"
   ],
   "descripcion": "Cuaderno de lengua española para aprender todas las letras del abecedario con actividades divertidas y caligrafías, una por cada letra.",
-  "digital": 0.09,
+  "digital": 1.99,
   "impreso": 715,
   "img": "guias/el-abecedario-divertido/001_portada.jpg",
   "imgs": [
