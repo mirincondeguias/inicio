@@ -84,6 +84,7 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .pistas{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:auto;overscroll-behavior-x:contain}
 .pistas::-webkit-scrollbar{display:none}
 .pistas img{flex:0 0 100%;scroll-snap-align:start;display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.pagbadge{position:absolute;top:8px;left:8px;z-index:2;background:var(--tinta);color:#fff;font-weight:800;font-size:.8rem;line-height:1;padding:5px 10px;border-radius:999px;box-shadow:2px 2px 0 rgba(0,0,0,.18);pointer-events:none}
 .fl{position:absolute;top:50%;translate:0 -50%;width:36px;height:36px;border:2px solid var(--tinta);border-radius:50%;background:rgba(255,247,232,.92);color:var(--tinta);font-weight:800;font-size:1.3rem;line-height:1;padding:0}
 .fl.prev{left:6px}.fl.next{right:6px}
 .body{display:flex;flex-direction:column;gap:10px;padding:16px;flex:1}
@@ -103,7 +104,7 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .wa{background:var(--wa)}
 /* mis productos: misma rejilla/tarjeta del catálogo, sin ventana flotante */
 .mio-card .fmt{display:none}
-.mio-portada{cursor:pointer;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
+.mio-portada{position:relative;cursor:pointer;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
 .mio-portada img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
 #volverCat{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
 #volverCat:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
@@ -362,7 +363,7 @@ function puntos(g,qs){let t=0,ok=0;for(const q of qs){
 
 /* pintar catálogo */
 function carrusel(g){const im=g.imgs&&g.imgs.length?g.imgs:[g.img],n=im.length;
-  return `<div class="car"><div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
+  return `<div class="car">${g.paginas?`<span class="pagbadge">${g.paginas} pág.</span>`:''}<div class="pistas" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Páginas de ${esc(g.titulo)}">${im.map((s,k)=>`<img src="${s}" alt="${k?'Página '+k+' de':'Portada de'} ${esc(g.titulo)}" loading="lazy">`).join('')}</div>${n>1?`<button class="fl prev" data-a="prev" aria-label="Página anterior">‹</button><button class="fl next" data-a="next" aria-label="Página siguiente">›</button>`:''}</div>`}
 function tarjeta(g,i,cat){
   const f=fmt[i]||(fmt[i]=g.digital!=null?'d':'p');
   const en=cart[i+'|'+f]||0, bloqueada=f=='d'&&en;
@@ -523,8 +524,9 @@ function portadaDe(c,g){
   return c.img||'';
 }
 function tarjetaMia(c,idx){
+  const pag=(c._g&&c._g.paginas)||c.paginas;
   return `<article class="card mio-card" style="--c:${COL[idx%COL.length]}" data-i="m${idx}">
-   <div class="img"><div class="mio-portada" data-a="verPaginas"><img src="${c._portada}" alt="Portada de ${esc(c.titulo)}" loading="lazy"></div></div>
+   <div class="img"><div class="mio-portada" data-a="verPaginas">${pag?`<span class="pagbadge">${pag} pág.</span>`:''}<img src="${c._portada}" alt="Portada de ${esc(c.titulo)}" loading="lazy"></div></div>
    <div class="body"><h3>${esc(c.titulo)}</h3>
    <button class="btn comprar" type="button" data-a="verPaginas">Ver todas las páginas</button>
    ${c._url?`<a class="btn add" href="${c._url}" target="_blank" rel="noopener" download>Descargar</a>`:'<span class="enc" style="text-align:center">Ya registramos tu compra. Pronto activaremos tu descarga.</span>'}
