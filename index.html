@@ -26,6 +26,26 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .marca img{width:46px;height:46px;flex:none}.marca span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #btnCarrito{flex:none;min-height:44px;position:relative;display:flex;align-items:center;gap:8px;background:var(--amarillo);color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 18px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
 #btnCarrito:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+.acciones{flex:none;display:flex;align-items:center;gap:10px}
+#btnMios{flex:none;min-height:44px;display:flex;align-items:center;gap:8px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:8px 16px;font-weight:800;box-shadow:3px 3px 0 var(--tinta)}
+#btnMios:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--tinta)}
+#veloM{position:fixed;inset:0;background:rgba(74,46,31,.55);z-index:32;display:none}
+#modal{position:fixed;top:50%;left:50%;translate:-50% -50%;width:min(420px,92vw);max-height:88vh;overflow-y:auto;background:var(--crema);border:var(--borde);border-radius:22px;z-index:33;display:none;box-shadow:7px 7px 0 var(--tinta)}
+body.modalAbierto #veloM,body.modalAbierto #modal{display:block}
+body.modalAbierto{overflow:hidden}
+html:has(body.modalAbierto){overflow:hidden}
+#modal header{position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+#modal h2{font-size:1.3rem}
+#modalCerrar{flex:none;width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.1rem;font-weight:800}
+#modalBody{padding:18px}
+#modalBody img{width:100%;max-width:240px;display:block;margin:0 auto 16px;border:var(--borde);border-radius:16px}
+#modalBody h3{text-align:center;margin-bottom:16px}
+#modalBody .btn{width:100%;margin-bottom:10px;box-sizing:border-box}
+#modalBody input{width:100%;padding:12px;border:var(--borde);border-radius:12px;margin-bottom:10px;font:inherit;box-sizing:border-box}
+.mio{display:flex;gap:10px;align-items:center;border:var(--borde);border-radius:14px;padding:8px;margin-bottom:10px}
+.mio img{width:0;flex:none;width:50px;height:66px;object-fit:cover;border-radius:8px;border:2px solid var(--tinta);margin:0}
+.mio b{flex:1;font:600 1.05rem Fredoka,sans-serif}
+.mio .btn{width:auto;margin:0;padding:8px 14px}
 #cuenta{background:var(--tinta);color:#fff;border-radius:999px;min-width:26px;padding:0 8px;text-align:center;font-size:.9rem}
 #cuenta.salto{animation:salto .4s}
 @keyframes salto{40%{transform:scale(1.5)}}
@@ -103,7 +123,7 @@ body.abierto #cajon{translate:0 0;visibility:visible}
 #cajon header{position:static;padding:max(14px,env(safe-area-inset-top)) 18px 14px;display:flex;justify-content:space-between;align-items:center;height:auto}
 #cajon h2{font-size:1.5rem}
 #cerrar{width:44px;height:44px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.2rem;font-weight:800}
-#lineas{flex:1;overflow:auto;overscroll-behavior:contain;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+#lineas{padding:14px 18px;display:flex;flex-direction:column;gap:12px}
 .lin{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;background:#fff;border:var(--borde);border-radius:16px;padding:10px}
 .lin img{width:56px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--tinta)}
 .lin h4{margin:0;font:600 1.05rem/1.2 Fredoka,sans-serif}
@@ -114,7 +134,8 @@ body.abierto #cajon{translate:0 0;visibility:visible}
 .ctl .quitar{width:auto;border-radius:999px;padding:0 12px;font-size:.85rem}
 .ctl .pr{margin-left:auto;font:600 1.1rem Fredoka,sans-serif}
 .vacio{text-align:center;padding:40px 10px}
-#pie{padding:16px 18px max(16px,env(safe-area-inset-bottom));border-top:var(--borde);display:grid;gap:12px}
+#cuerpo{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column}
+#pie{flex:none;padding:16px 18px max(16px,env(safe-area-inset-bottom));border-top:var(--borde);display:grid;gap:12px}
 #pie .tot{display:flex;justify-content:space-between;font:600 1.4rem Fredoka,sans-serif}
 #pie .btn[aria-disabled=true]{opacity:.5;pointer-events:none}
 #aviso{position:fixed;left:50%;top:calc(78px + env(safe-area-inset-top));translate:-50% calc(-100% - 200px);width:max-content;max-width:calc(100% - 32px);text-align:center;background:var(--tinta);color:#fff;padding:10px 20px;border-radius:20px;z-index:40;transition:translate .3s;pointer-events:none}
@@ -170,7 +191,10 @@ header .wrap{height:60px}
 <body>
 <header><div class="wrap">
   <a class="marca" href="#"><img src="logo.png" alt=""><span>Mi Rincón de Guías</span></a>
+  <div class="acciones">
+  <button id="btnMios" aria-label="Ver mis productos">📦 <span class="tx">Mis productos</span></button>
   <button id="btnCarrito" aria-label="Abrir carrito">🛒 <span class="tx">Carrito</span> <span id="cuenta">0</span></button>
+  </div>
 </div></header>
 
 <main>
@@ -203,17 +227,53 @@ header .wrap{height:60px}
 <div id="velo"></div>
 <aside id="cajon" aria-label="Carrito de compras">
   <header><h2>Tu carrito</h2><button id="cerrar" aria-label="Cerrar carrito">✕</button></header>
+  <div id="cuerpo">
   <div id="lineas"></div>
   <div id="pie"><div class="tot"><span>Total</span><span id="total"></span></div>
   <div id="pp-cart-box"></div>
   <a id="pedir" class="btn wa" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a></div>
+  </div>
 </aside>
 <div id="aviso" role="status"></div>
+<div id="veloM"></div>
+<aside id="modal" aria-label="Ventana" role="dialog" aria-modal="true">
+  <header><h2 id="modalTit"></h2><button id="modalCerrar" aria-label="Cerrar">✕</button></header>
+  <div id="modalBody"></div>
+</aside>
 
 <script src="guias.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=BAAscGDV97LVWgWVJ-78Mk_9alENONvfxUvJ1VkVrhkmovng1HtMySNf-qDpCTmuLlRFsDRAhrgerYDLiQ&currency=USD&intent=capture&components=buttons"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const CFG={tel:'18294505143',mon:'RD$',negocio:'Mi Rincón de Guías',rota:1000};
+/* === Supabase ===
+   1) Crea un proyecto gratis en supabase.com
+   2) Project Settings → API → copia "Project URL" y la llave "anon public"
+   3) Pégalas aquí. La "anon public" SÍ es segura en el navegador (no es como el secret de PayPal),
+      siempre que actives Row Level Security en las tablas (ver instrucciones que te di aparte).
+   4) Crea la tabla "compras" con: email (text), producto_id (text), titulo (text), img (text),
+      creado_en (timestamptz default now()) y UNIQUE(email, producto_id).
+   5) Crea la tabla "enlaces" con: titulo (text, primary key) y link (text) — ahí guardas,
+      por cada guía, el link de descarga del PDF. El título debe escribirse igual que en tu
+      catálogo (mayúsculas/minúsculas no importan, mira más abajo cómo se compara). */
+const SUPA_URL='https://ihenmezfdlnluvfjbzje.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZW5tZXpmZGxubHV2ZmpiemplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0MjY3MDIsImV4cCI6MjEwNjAwMjcwMn0.aGcPbn8KQBTkRNU33y2MHOTizWv3BXrFnNXsFYifm2g';
+const supa=(SUPA_URL.includes('TU-PROYECTO')||typeof window.supabase=='undefined')?null:window.supabase.createClient(SUPA_URL,SUPA_KEY);
+/* busca en la tabla "enlaces" el link cuyo título coincide (sin importar mayúsculas/minúsculas), un solo resultado */
+async function buscarEnlace(titulo){
+  if(!supa)return null;
+  try{
+    const{data,error}=await supa.from('enlaces').select('link').ilike('titulo',titulo).limit(1).maybeSingle();
+    if(error||!data)return null;
+    return data.link||null;
+  }catch(e){console.error('No se pudo buscar el enlace:',e);return null}
+}
+/* si el link es de Google Drive (link para compartir), lo convierte en descarga directa; si no, lo deja tal cual */
+function enlaceDescarga(link){
+  if(!link)return null;
+  const m=link.match(/\/file\/d\/([^/]+)/)||link.match(/[?&]id=([^&]+)/);
+  return m?`https://drive.google.com/uc?export=download&id=${m[1]}`:link;
+}
 const COL=['#2F8FD8','#F58A33','#4DB35A','#F2648A','#9B7BD8'];
 const G=(window.GUIAS||[]);
 /* categorías: orden fijo de exhibición + un color por categoría */
@@ -314,8 +374,10 @@ $('#rejilla').addEventListener('click',e=>{
     const abierta=box.classList.toggle('abierta');
     if(abierta&&!box.dataset.pp){
       box.dataset.pp='1';
-      renderPPButton(box,precio(g,'d'),g.titulo,()=>{
-        box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido! Te enviaremos la guía a tu correo.</p>';
+      renderPPButton(box,precio(g,'d'),g.titulo,details=>{
+        const email=details.payer&&details.payer.email_address||'';
+        guardarCompra(email,[g]).then(()=>pantallaCompra(g));
+        box.innerHTML='<p class="pp-ok">✓ ¡Pago recibido!</p>';
         aviso(`«${g.titulo}» comprada. ¡Gracias!`);
       });
     }
@@ -331,17 +393,19 @@ $('#rejilla').addEventListener('click',e=>{
 /* PayPal: crea un botón de pago para un monto y una descripción dadas */
 function renderPPButton(container,amount,descripcion,alPagar){
   if(typeof paypal=='undefined'){container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo cargar PayPal. Revisa tu conexión e intenta de nuevo.</p>';return}
+  const val=parseFloat(String(amount).replace(/[^0-9.,-]/g,'').replace(',','.'));
+  if(!(val>0)){container.innerHTML='<p class="pp-ok" style="color:#c0392b">Precio inválido para este producto. Revisa el número en guias.js (debe ser algo como 0.99, con punto y sin símbolos).</p>';return}
   container.innerHTML='';
   paypal.Buttons({
     style:{layout:'vertical',color:'gold',shape:'pill',label:'pay'},
     createOrder:(d,actions)=>actions.order.create({
       intent:'CAPTURE',
-      purchase_units:[{description:String(descripcion).slice(0,127),amount:{currency_code:'USD',value:Number(amount).toFixed(2)}}],
+      purchase_units:[{description:String(descripcion).slice(0,127),amount:{currency_code:'USD',value:val.toFixed(2)}}],
       application_context:{shipping_preference:'NO_SHIPPING'}
     }),
     onApprove:(d,actions)=>actions.order.capture().then(alPagar),
-    onError:err=>{console.error(err);alert('Ocurrió un problema procesando el pago. Intenta de nuevo.')}
-  }).render(container);
+    onError:err=>{console.error(err);container.innerHTML='<p class="pp-ok" style="color:#c0392b">Ocurrió un problema con PayPal. Intenta de nuevo o revisa la consola del navegador.</p>'}
+  }).render(container).catch(err=>{console.error(err);container.innerHTML='<p class="pp-ok" style="color:#c0392b">No se pudo mostrar el botón de pago. Revisa la consola del navegador (F12) para más detalle.</p>'});
 }
 /* PayPal: botón para cobrar el total de productos digitales del carrito */
 let ppCartTot=null;
@@ -350,13 +414,76 @@ function renderCartPP(totD){
   if(totD===ppCartTot)return;
   ppCartTot=totD;
   if(!totD){box.innerHTML='';return}
-  renderPPButton(box,totD,'Guías digitales - '+CFG.negocio,()=>{
+  const items=Object.keys(cart).filter(k=>k.endsWith('|d')).map(k=>G[k.split('|')[0]]);
+  renderPPButton(box,totD,'Guías digitales - '+CFG.negocio,details=>{
+    const email=details.payer&&details.payer.email_address||'';
     Object.keys(cart).forEach(k=>{if(k.endsWith('|d'))delete cart[k]});
     ppCartTot=null;
-    aviso('¡Pago recibido! Te enviaremos tus guías digitales por correo.');
+    guardarCompra(email,items).then(()=>{items.length==1?pantallaCompra(items[0]):pantallaMisProductos(email)});
+    aviso('¡Pago recibido! Gracias por tu compra.');
     cambio();
   });
 }
+
+/* ventana modal genérica */
+function abrirModal(titulo,html){
+  document.querySelectorAll('.pp-box.abierta').forEach(b=>b.classList.remove('abierta'));
+  document.body.classList.remove('abierto');
+  $('#modalTit').textContent=titulo;$('#modalBody').innerHTML=html;
+  document.body.classList.add('modalAbierto');
+}
+function cerrarModal(){document.body.classList.remove('modalAbierto')}
+$('#modalCerrar').onclick=$('#veloM').onclick=cerrarModal;
+
+/* guarda en Supabase qué guías digitales compró un correo */
+async function guardarCompra(email,guias){
+  if(!supa||!email)return;
+  try{
+    const filas=guias.map(g=>({email,producto_id:String(g.id||g.titulo),titulo:g.titulo,img:g.img}));
+    await supa.from('compras').upsert(filas,{onConflict:'email,producto_id'});
+    localStorage.setItem('mrg-email',email);
+  }catch(e){console.error('No se pudo guardar la compra en Supabase:',e)}
+}
+
+/* pantalla de "compra exitosa" con la portada, el título y el botón de descarga */
+async function pantallaCompra(g){
+  abrirModal('¡Compra exitosa!','<p style="text-align:center">Buscando tu enlace de descarga…</p>');
+  const url=enlaceDescarga(await buscarEnlace(g.titulo));
+  $('#modalBody').innerHTML=`
+    <img src="${g.img}" alt="${esc(g.titulo)}">
+    <h3>${esc(g.titulo)}</h3>
+    ${url?`<a class="btn add" href="${url}" target="_blank" rel="noopener" download>Descargar producto</a>`
+         :`<p style="text-align:center">Ya registramos tu compra. En breve activaremos tu descarga y te avisaremos por correo.</p>`}
+    <button class="btn wa" type="button" id="verMiosBtn">Ver todos mis productos</button>
+  `;
+  $('#verMiosBtn').onclick=()=>pantallaMisProductos();
+}
+
+/* pantalla "mis productos": pide correo (si no lo conocemos) y lista sus compras digitales */
+async function pantallaMisProductos(email){
+  email=email||localStorage.getItem('mrg-email')||'';
+  if(!email){
+    abrirModal('Mis productos',`
+      <p>Escribe el correo con el que compraste para ver tus guías.</p>
+      <input id="misEmail" type="email" placeholder="tu@correo.com" autocomplete="email">
+      <button class="btn add" type="button" id="misBuscar">Buscar mis productos</button>
+    `);
+    $('#misBuscar').onclick=()=>{const e=$('#misEmail').value.trim();if(e)pantallaMisProductos(e)};
+    return;
+  }
+  abrirModal('Mis productos','<p>Cargando…</p>');
+  if(!supa){$('#modalBody').innerHTML='<p>La tienda aún no tiene conectada la base de datos.</p>';return}
+  const{data,error}=await supa.from('compras').select('*').eq('email',email).order('creado_en',{ascending:false});
+  if(error){$('#modalBody').innerHTML='<p>Ocurrió un error buscando tus productos. Intenta de nuevo.</p>';return}
+  if(!data||!data.length){$('#modalBody').innerHTML='<p>No encontramos compras con ese correo.</p>';return}
+  localStorage.setItem('mrg-email',email);
+  const filas=await Promise.all(data.map(async c=>{
+    const url=enlaceDescarga(await buscarEnlace(c.titulo));
+    return `<div class="mio"><img src="${c.img||''}" alt=""><b>${esc(c.titulo)}</b>${url?`<a class="btn add" href="${url}" target="_blank" rel="noopener" download>Descargar</a>`:'<span style="font-size:.85rem">Pronto</span>'}</div>`;
+  }));
+  $('#modalBody').innerHTML=filas.join('');
+}
+$('#btnMios').onclick=()=>pantallaMisProductos();
 
 /* panel del carrito */
 function cambio(){guardar();pintar();cajon()}
@@ -379,9 +506,9 @@ function cajon(){
 $('#lineas').addEventListener('click',e=>{
   const b=e.target.closest('[data-c]');if(!b)return;const k=b.closest('.lin').dataset.k,c=b.dataset.c;
   if(c=='+')cart[k]++;else if(c=='-'){if(--cart[k]<1)delete cart[k]}else delete cart[k];cambio()});
-const abrir=v=>{document.body.classList.toggle('abierto',v);if(v)$('#cerrar').focus();else $('#btnCarrito').focus()};
+const abrir=v=>{document.body.classList.toggle('abierto',v);if(v){document.querySelectorAll('.pp-box.abierta').forEach(b=>b.classList.remove('abierta'));$('#cerrar').focus()}else $('#btnCarrito').focus()};
 $('#btnCarrito').onclick=()=>abrir(true);$('#cerrar').onclick=$('#velo').onclick=()=>abrir(false);
-addEventListener('keydown',e=>{if(e.key=='Escape')abrir(false)});
+addEventListener('keydown',e=>{if(e.key=='Escape'){abrir(false);cerrarModal()}});
 let tm;function aviso(t){const a=$('#aviso');a.textContent=t;a.classList.add('ver');clearTimeout(tm);tm=setTimeout(()=>a.classList.remove('ver'),1800)}
 
 /* carrusel: rota solo, se pausa al tocarlo o pasar el mouse, y se puede deslizar */
