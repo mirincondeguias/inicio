@@ -102,25 +102,25 @@ h1 .l{display:inline-block;animation:brota .55s cubic-bezier(.3,1.6,.5,1) backwa
 .add:disabled{background:#e8dccb;box-shadow:none;cursor:default}
 .wa{background:var(--wa)}
 /* mis productos: misma rejilla/tarjeta del catálogo, sin ventana flotante */
-.mio-card .car{cursor:pointer}
 .mio-card .fmt{display:none}
+.mio-portada{cursor:pointer;border:var(--borde);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#fff}
+.mio-portada img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
 #volverCat{flex:none;min-height:40px;display:flex;align-items:center;gap:6px;background:#fff;color:var(--tinta);border:var(--borde);border-radius:999px;padding:7px 16px;font-weight:800;box-shadow:2px 2px 0 var(--tinta)}
 #volverCat:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--tinta)}
 #miosEmailBox .custom{--c:var(--azul)}
 #miosEmailBox input{width:100%;padding:12px;border:var(--borde);border-radius:12px;margin-bottom:10px;font:inherit;box-sizing:border-box}
 /* previsualización de todas las páginas del PDF (superpuesta, como una lupa sobre la tarjeta) */
 #veloPrevia{position:fixed;inset:0;background:rgba(74,46,31,.72);z-index:42;display:none}
-#previaPDF{position:fixed;top:50%;left:50%;translate:-50% -50%;width:min(680px,94vw);max-height:92vh;background:var(--crema);border:var(--borde);border-radius:22px;z-index:43;display:none;flex-direction:column;box-shadow:7px 7px 0 var(--tinta)}
+#previaPDF{position:fixed;top:50%;left:50%;translate:-50% -50%;width:min(900px,96vw);height:92vh;max-height:92vh;background:var(--crema);border:var(--borde);border-radius:22px;z-index:43;display:none;flex-direction:column;box-shadow:7px 7px 0 var(--tinta)}
 body.previaAbierta #veloPrevia,body.previaAbierta #previaPDF{display:flex}
 body.previaAbierta{overflow:hidden}
 html:has(body.previaAbierta){overflow:hidden}
 #previaPDF header{flex:none;position:sticky;top:0;background:var(--crema);border-bottom:var(--borde);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-radius:19px 19px 0 0}
 #previaPDF h2{font-size:1.3rem}
 #previaCerrar{flex:none;width:40px;height:40px;border:var(--borde);border-radius:50%;background:#fff;color:var(--tinta);font-size:1.1rem;font-weight:800}
-#previaBody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;display:flex;flex-direction:column;gap:16px}
-.pagina{display:flex;flex-direction:column;align-items:center;gap:6px}
-.pagina img{width:100%;max-width:460px;border:var(--borde);border-radius:12px;display:block}
-.pagina .num{font-size:.85rem;font-weight:800;color:#7b5b46}
+#previaBody{flex:1;min-height:0;padding:0}
+#previaBody iframe{width:100%;height:100%;min-height:70vh;border:0;display:block}
+#previaBody p{padding:18px;margin:0}
 #previaPie{flex:none;padding:14px 18px max(14px,env(safe-area-inset-bottom));border-top:var(--borde)}
 #previaPie:empty{display:none;border:0;padding:0}
 #previaPie .btn{box-sizing:border-box}
@@ -309,6 +309,12 @@ function enlaceDescarga(link){
   if(!link)return null;
   const m=link.match(/\/file\/d\/([^/]+)/)||link.match(/[?&]id=([^&]+)/);
   return m?`https://drive.google.com/uc?export=download&id=${m[1]}`:link;
+}
+/* versión "para ver dentro de la página" (embebida en un iframe) del mismo enlace guardado */
+function enlacePrevia(link){
+  if(!link)return null;
+  const m=link.match(/\/file\/d\/([^/]+)/)||link.match(/[?&]id=([^&]+)/);
+  return m?`https://drive.google.com/file/d/${m[1]}/preview`:link;
 }
 const COL=['#2F8FD8','#F58A33','#4DB35A','#F2648A','#9B7BD8'];
 const G=(window.GUIAS||[]);
@@ -511,14 +517,14 @@ function buscarProductoPorTitulo(t){
 }
 /* páginas del PDF a mostrar en el carrusel de una compra: usa g.paginas si existe,
    si no, cae en g.imgs (las imágenes del catálogo) o en la portada guardada */
-function paginasDe(c,g){
-  if(g&&g.paginas&&g.paginas.length)return g.paginas;
-  if(g&&g.imgs&&g.imgs.length)return g.imgs;
-  return[c.img||(g&&g.img)||''];
+function portadaDe(c,g){
+  if(g&&g.imgs&&g.imgs.length)return g.imgs[0];
+  if(g&&g.img)return g.img;
+  return c.img||'';
 }
-function tarjetaMia(c,idx,paginas){
+function tarjetaMia(c,idx){
   return `<article class="card mio-card" style="--c:${COL[idx%COL.length]}" data-i="m${idx}">
-   <div class="img">${carrusel({titulo:c.titulo,imgs:paginas})}</div>
+   <div class="img"><div class="mio-portada" data-a="verPaginas"><img src="${c._portada}" alt="Portada de ${esc(c.titulo)}" loading="lazy"></div></div>
    <div class="body"><h3>${esc(c.titulo)}</h3>
    <button class="btn comprar" type="button" data-a="verPaginas">Ver todas las páginas</button>
    ${c._url?`<a class="btn add" href="${c._url}" target="_blank" rel="noopener" download>Descargar</a>`:'<span class="enc" style="text-align:center">Ya registramos tu compra. Pronto activaremos tu descarga.</span>'}
@@ -552,15 +558,16 @@ async function cargarMisProductos(email){
   localStorage.setItem('mrg-email',email);
   MIOS=await Promise.all(data.map(async c=>{
     const g=buscarProductoPorTitulo(c.titulo);
-    const url=enlaceDescarga(await buscarEnlace(c.titulo));
-    return{...c,_g:g,_url:url,_paginas:paginasDe(c,g)};
+    const link=await buscarEnlace(c.titulo);
+    return{...c,_g:g,_url:enlaceDescarga(link),_preview:enlacePrevia(link),_portada:portadaDe(c,g)};
   }));
-  rej.innerHTML=`<div class="grupo"><div class="rejilla">${MIOS.map((c,idx)=>tarjetaMia(c,idx,c._paginas)).join('')}</div></div>`;
+  rej.innerHTML=`<div class="grupo"><div class="rejilla">${MIOS.map((c,idx)=>tarjetaMia(c,idx)).join('')}</div></div>`;
 }
 function abrirPreviaPDF(item){
-  const paginas=item._paginas&&item._paginas.length?item._paginas:[item.img||''];
   $('#previaTit').textContent=item.titulo;
-  $('#previaBody').innerHTML=paginas.map((s,k)=>`<div class="pagina"><img src="${s}" alt="Página ${k+1} de ${esc(item.titulo)}" loading="lazy"><span class="num">Página ${k+1} de ${paginas.length}</span></div>`).join('');
+  $('#previaBody').innerHTML=item._preview
+    ?`<iframe src="${item._preview}" title="Vista previa de ${esc(item.titulo)}" loading="lazy" allow="autoplay"></iframe>`
+    :'<p style="text-align:center">Aún no hay una vista previa disponible para este producto.</p>';
   $('#previaPie').innerHTML=item._url?`<a class="btn add" href="${item._url}" target="_blank" rel="noopener" download>Descargar producto</a>`:'';
   document.body.classList.add('previaAbierta');
 }
@@ -569,10 +576,7 @@ $('#previaCerrar').onclick=$('#veloPrevia').onclick=cerrarPreviaPDF;
 $('#miosRejilla').addEventListener('click',e=>{
   const card=e.target.closest('.card');if(!card)return;
   const idx=+card.dataset.i.slice(1),item=MIOS[idx];
-  const fl=e.target.closest('.fl');
-  if(fl){const c=card.querySelector('.pistas'),n=c.children.length;
-    ir(c,(pos(c)+(fl.dataset.a=='next'?1:-1)+n)%n);c._p=Date.now()+5000;return}
-  if(e.target.closest('[data-a="verPaginas"]')||e.target.closest('.car')){abrirPreviaPDF(item);return}
+  if(e.target.closest('[data-a="verPaginas"]')){abrirPreviaPDF(item);return}
 });
 $('#btnMios').onclick=()=>{mostrarVista('mios');cargarMisProductos()};
 $('#volverCat').onclick=()=>mostrarVista('catalogo');
@@ -616,7 +620,6 @@ function engancharCarrusel(cont){
   cont.addEventListener('mouseleave',()=>sobre=null);
 }
 engancharCarrusel($('#rejilla'));
-engancharCarrusel($('#miosRejilla'));
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(()=>{
   if(document.hidden||document.body.classList.contains('abierto'))return;
   document.querySelectorAll('.pistas').forEach(c=>{
