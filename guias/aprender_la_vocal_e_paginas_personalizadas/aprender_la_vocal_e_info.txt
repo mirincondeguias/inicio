@@ -1,0 +1,5 @@
+titulo: Aprender la vocal E
+categoria: Lenguaje, Preescolar, Lectoescritura
+precio digital: 1.99
+descripcion: Cuaderno de actividades de diez páginas diseñado para la enseñanza de la vocal E mediante ejercicios interactivos de colorear, trazar y reconocer grafemas para niños de preescolar.
+precio impresa: 300
