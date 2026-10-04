@@ -1,0 +1,5 @@
+titulo: Aprender la vocal I
+categoria: Lenguaje, Lectoescritura, Preescolar
+precio digital: 1.99
+descripcion: Guía práctica de diez páginas diseñada para que niños de preescolar identifiquen y tracen la vocal I mediante actividades lúdicas de discriminación visual y motricidad fina.
+precio impresa: 300
