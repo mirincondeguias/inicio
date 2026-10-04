@@ -52,6 +52,32 @@ window.GUIAS = [
   ]
  },
  {
+  "titulo": "Aprender la vocal I",
+  "categoria": [
+   "Lenguaje",
+   "Lectoescritura",
+   "Preescolar"
+  ],
+  "descripcion": "Guía práctica de diez páginas diseñada para que niños de preescolar identifiquen y tracen la vocal I mediante actividades lúdicas de discriminación visual y motricidad fina.",
+  "digital": 1.99,
+  "impreso": 300,
+  "img": "guias/aprender_la_vocal_i_paginas_personalizadas/001_portada.png",
+  "imgs": [
+   "guias/aprender_la_vocal_i_paginas_personalizadas/001_portada.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/002_pagina_1.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/003_pagina_2.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/004_pagina_3.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/005_pagina_4.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/006_pagina_5.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/007_pagina_6.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/008_pagina_7.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/009_pagina_8.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/010_pagina_9.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/011_pagina_10.png",
+   "guias/aprender_la_vocal_i_paginas_personalizadas/012_certificado.png"
+  ]
+ },
+ {
   "titulo": "Cuenta la Historia de la Creación en 7 Días",
   "categoria": [
    "Religión y Valores"
