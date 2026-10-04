@@ -1,5 +1,5 @@
-titulo: El Abecedario Divertido
-categoria: Lengua Española, Caligrafía
+titulo: Aprender la vocal A
+categoria: Lenguaje, Preescolar, Lectoescritura
 precio digital: 1.99
-descripcion: Cuaderno de lengua española para aprender todas las letras del abecedario con actividades divertidas y caligrafías, una por cada letra.
+descripcion: Cuaderno de actividades de diez páginas diseñado para la enseñanza de la vocal A mediante ejercicios interactivos de colorear, trazar y reconocer grafemas para niños de preescolar.
 precio impresa: 300
