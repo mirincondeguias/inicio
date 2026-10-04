@@ -1,11 +1,12 @@
 window.GUIAS = [
  {
-  "titulo": "El Abecedario Divertido",
+  "titulo": "Aprender la vocal A",
   "categoria": [
-   "Lengua Española",
-   "Caligrafía"
+   "Lenguaje",
+   "Preescolar",
+   "Lectoescritura"
   ],
-  "descripcion": "Cuaderno de lengua española para aprender todas las letras del abecedario con actividades divertidas y caligrafías, una por cada letra.",
+  "descripcion": "Cuaderno de actividades de diez páginas diseñado para la enseñanza de la vocal A mediante ejercicios interactivos de colorear, trazar y reconocer grafemas para niños de preescolar.",
   "digital": 1.99,
   "impreso": 300,
   "img": "guias/aprender_la_vocal_a_paginas_personalizadas/001_portada.png",
