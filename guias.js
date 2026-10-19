@@ -1,5 +1,31 @@
 window.GUIAS = [
  {
+  "titulo": "Aprender la vocal O",
+  "categoria": [
+   "Lenguaje",
+   "Lectoescritura",
+   "Preescolar"
+  ],
+  "descripcion": "Guía práctica de diez páginas diseñada para que niños de preescolar identifiquen y tracen la vocal O mediante actividades lúdicas de discriminación visual y motricidad fina.",
+  "digital": 1.99,
+  "impreso": 300,
+  "img": "guias/aprender-la-vocal-o/001_portada.png",
+  "imgs": [
+   "guias/aprender-la-vocal-o/001_portada.png",
+   "guias/aprender-la-vocal-o/002_pagina_1.png",
+   "guias/aprender-la-vocal-o/003_pagina_2.png",
+   "guias/aprender-la-vocal-o/004_pagina_3.png",
+   "guias/aprender-la-vocal-o/005_pagina_4.png",
+   "guias/aprender-la-vocal-o/006_pagina_5.png",
+   "guias/aprender-la-vocal-o/007_pagina_6.png",
+   "guias/aprender-la-vocal-o/008_pagina_7.png",
+   "guias/aprender-la-vocal-o/009_pagina_8.png",
+   "guias/aprender-la-vocal-o/010_pagina_9.png",
+   "guias/aprender-la-vocal-o/011_pagina_10.png",
+   "guias/aprender-la-vocal-o/012_certificado.png"
+  ]
+ },
+ {
   "titulo": "Aprender la vocal U",
   "categoria": [
    "Lenguaje",
